@@ -1,0 +1,14 @@
+{
+  "control": {
+    "engine": "CK", 
+    "version": [
+      "0", 
+      "9", 
+      "4113"
+    ], 
+    "iso_datetime": "2014-12-06T15:37:45.140000"
+  }, 
+  "backup_module_uoa": "module", 
+  "data_name": "dissemination workshop", 
+  "backup_module_uid": "e9a4bb5e10b91e40"
+}

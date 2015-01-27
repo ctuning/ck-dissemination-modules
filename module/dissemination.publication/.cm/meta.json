@@ -1,0 +1,10 @@
+{
+  "desc": "Dissemination - publication", 
+  "actions": {
+    "generate": {
+      "desc": "generate title"
+    }
+  }, 
+  "license": "CK 1.x license", 
+  "developer": "Grigori Fursin"
+}

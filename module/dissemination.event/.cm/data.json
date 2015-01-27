@@ -1,0 +1,49 @@
+{
+  "authors": [
+    "0728a400aa1c86fe"
+  ], 
+  "cm_access_control": {
+    "comments_groups": "admin", 
+    "read_groups": "all", 
+    "write_groups": "admin"
+  }, 
+  "cm_actions": [
+    {
+      "cm_index": "generate", 
+      "desc": "generate", 
+      "func": "generate", 
+      "params": ""
+    },
+    {
+      "cm_index": "summary", 
+      "desc": "summary", 
+      "func": "summary", 
+      "params": ""
+    } 
+  ],
+  "cm_common_actions": [], 
+  "cm_description": "event", 
+  "cm_display_as_alias": "Dissemination - Event", 
+  "cm_module_py_dir": "", 
+  "cm_module_py_ext": "module", 
+  "cm_modules": {
+    "cm-core": "9ac54cef3d7caa8a",
+    "choice":"339244b9d9818161",
+    "qr-code":"6a89ff344f0973a7",
+    "person":"b0743a4044480ead"
+  }, 
+  "cm_updated": [
+    {
+      "cm_iso_datetime": "2012-06-07T21:27:48.228000", 
+      "cm_module_uid": "5fa7f671fd112e70", 
+      "cm_note": "", 
+      "cm_user_uoa": "74c2480dcec9e85d"
+    }
+  ], 
+  "license": "cM 1.x license", 
+  "powered_by": {
+    "name": "Collective Mind Engine", 
+    "version": "1.0.1977.beta"
+  }, 
+  "url_module": ""
+}

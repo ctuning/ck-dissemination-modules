@@ -1,0 +1,36 @@
+{
+  "authors": [], 
+  "cm_access_control": {
+    "comments_groups": "registered", 
+    "read_groups": "all", 
+    "write_groups": "owner"
+  }, 
+  "cm_actions": [], 
+  "cm_classes_uoa": [], 
+  "cm_data_description": {}, 
+  "cm_dependencies": {
+    "classes": []
+  }, 
+  "cm_display_as_alias": "Dissemination - Lecture", 
+  "cm_dissemination": {}, 
+  "cm_module_py_dir": "", 
+  "cm_module_py_ext": "module", 
+  "cm_modules": {
+    "cm_core": "9ac54cef3d7caa8a"
+  }, 
+  "cm_properties": {}, 
+  "cm_updated": [
+    {
+      "cm_iso_datetime": "2013-08-30T18:46:24.555000", 
+      "cm_module_uid": "5fa7f671fd112e70", 
+      "cm_person_uoa": "c6642a5b007574c2", 
+      "cm_user_uoa": "c6642a5b007574c2"
+    }
+  ], 
+  "license": "", 
+  "powered_by": {
+    "name": "Collective Mind Engine", 
+    "version": "1.0.2015.beta"
+  }, 
+  "url_module": ""
+}

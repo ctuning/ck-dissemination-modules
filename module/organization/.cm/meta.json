@@ -1,0 +1,67 @@
+{
+  "cm_actions": [], 
+  "cm_common_actions": [], 
+  "license": "cM 1.x license", 
+  "cm_module_py_dir": "", 
+  "cm_modules": {
+    "cm-core": "9ac54cef3d7caa8a"
+  }, 
+  "cm_access_control": {
+    "read_groups": "all", 
+    "comments_groups": "admin", 
+    "write_groups": "admin"
+  }, 
+  "cm_data_description": {
+    "##urls@$": {
+      "default_value": "", 
+      "type": "url"
+    }, 
+    "##urls": {
+      "type_next": "values", 
+      "desc_text": "organizaton URLs", 
+      "type": "list", 
+      "skip_next_desc": "yes"
+    }, 
+    "##type": {
+      "has_choice": "yes", 
+      "desc_text": "type", 
+      "type": "text", 
+      "choice": [
+        "university", 
+        "company", 
+        "governmental organization"
+      ]
+    }, 
+    "##abbreviation": {
+      "desc_text": "abbreviation", 
+      "type": "text"
+    }, 
+    "##name": {
+      "desc_text": "name", 
+      "type": "text"
+    }, 
+    "##country": {
+      "desc_text": "country", 
+      "type": "text"
+    }
+  }, 
+  "cm_description": "organization", 
+  "cm_display_as_alias": "organization", 
+  "powered_by": {
+    "version": "1.0.1977.beta", 
+    "name": "Collective Mind Engine"
+  }, 
+  "cm_updated": [
+    {
+      "cm_iso_datetime": "2012-06-07T22:03:29.378000", 
+      "cm_note": "", 
+      "cm_module_uid": "5fa7f671fd112e70", 
+      "cm_user_uoa": "74c2480dcec9e85d"
+    }
+  ], 
+  "authors": [
+    "0728a400aa1c86fe"
+  ], 
+  "url_module": "", 
+  "cm_module_py_ext": "module"
+}

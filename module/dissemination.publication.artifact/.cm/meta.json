@@ -1,0 +1,90 @@
+{
+  "cm_actions": [
+    {
+      "params": "", 
+      "cm_index": "generate", 
+      "func": "generate", 
+      "desc": "generate"
+    }
+  ], 
+  "cm_common_actions": [], 
+  "license": "cM 1.x license", 
+  "cm_module_py_dir": "", 
+  "cm_modules": {
+    "choice": "339244b9d9818161", 
+    "cm-core": "9ac54cef3d7caa8a"
+  }, 
+  "cm_access_control": {
+    "read_groups": "all", 
+    "comments_groups": "admin", 
+    "write_groups": "admin"
+  }, 
+  "cm_data_description": {
+    "##authors@$#name": {
+      "cm_module_uoa": "b0743a4044480ead", 
+      "type": "uoa", 
+      "desc_text": "Name"
+    }, 
+    "##authors": {
+      "type_next": "dict", 
+      "desc_text": "authors", 
+      "skip_next_desc": "yes", 
+      "type": "list", 
+      "sort_index": "4"
+    }, 
+    "##related_publications": {
+      "type_next": "values", 
+      "desc_text": "Related publications", 
+      "skip_next_desc": "yes", 
+      "type": "list", 
+      "sort_index": "100"
+    }, 
+    "##related_publications@$": {
+      "cm_module_uoa": "29db2248aba45e59", 
+      "type": "uoa"
+    }, 
+    "##document_urls": {
+      "type_next": "values", 
+      "desc_text": "urls to the document", 
+      "skip_next_desc": "yes", 
+      "type": "list", 
+      "sort_index": "8"
+    }, 
+    "##authors@$#organization@$": {
+      "cm_module_uoa": "3594786b07dc710d", 
+      "type": "uoa"
+    }, 
+    "##document_urls@$": {
+      "type": "url"
+    }, 
+    "##authors@$#organization": {
+      "type_next": "values", 
+      "desc_text": "organization", 
+      "type": "list", 
+      "skip_next_desc": "yes"
+    }, 
+    "##title": {
+      "desc_text": "Title", 
+      "type": "text", 
+      "sort_index": "1"
+    }
+  }, 
+  "cm_description": "Dissemination - Publication - Artifact", 
+  "cm_display_as_alias": "Dissemination - Publication - Artifact", 
+  "powered_by": {
+    "version": "1.0.1977.beta", 
+    "name": "Collective Mind Engine"
+  }, 
+  "cm_updated": [
+    {
+      "cm_iso_datetime": "2012-06-07T21:27:48.228000", 
+      "cm_note": "", 
+      "cm_module_uid": "5fa7f671fd112e70", 
+      "cm_user_uoa": "74c2480dcec9e85d"
+    }
+  ], 
+  "authors": [
+    "0728a400aa1c86fe"
+  ], 
+  "cm_module_py_ext": "module"
+}

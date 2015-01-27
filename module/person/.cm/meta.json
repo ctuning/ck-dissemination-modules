@@ -1,0 +1,81 @@
+{
+  "cm_actions": [], 
+  "cm_common_actions": [], 
+  "license": "cM 1.x license", 
+  "cm_module_py_dir": "", 
+  "cm_modules": {
+    "cm-core": "9ac54cef3d7caa8a"
+  }, 
+  "cm_access_control": {
+    "read_groups": "all", 
+    "comments_groups": "admin", 
+    "write_groups": "admin"
+  }, 
+  "cm_data_description": {
+    "##cm_email": {
+      "desc_text": "email", 
+      "type": "email", 
+      "sort_index": "5"
+    }, 
+    "##publications": {
+      "type_next": "values", 
+      "desc_text": "publications", 
+      "type": "list", 
+      "skip_next_desc": "yes"
+    }, 
+    "##job_title": {
+      "desc_text": "job title", 
+      "type": "text", 
+      "sort_index": "6"
+    }, 
+    "##publications@$": {
+      "cm_module_uoa": "29db2248aba45e59", 
+      "type": "uoa"
+    }, 
+    "##job_organization@$": {
+      "cm_module_uoa": "3594786b07dc710d", 
+      "type": "uoa"
+    }, 
+    "##professional_web_page": {
+      "desc_text": "professional web page", 
+      "type": "url", 
+      "sort_index": "10"
+    }, 
+    "##name": {
+      "desc_text": "full name", 
+      "type": "text", 
+      "sort_index": "1"
+    }, 
+    "##job_organization": {
+      "type_next": "values", 
+      "desc_text": "job organization(s)", 
+      "skip_next_desc": "yes", 
+      "type": "list", 
+      "sort_index": "7"
+    }, 
+    "##personal_web_page": {
+      "desc_text": "personal web page", 
+      "type": "url", 
+      "sort_index": "15"
+    }
+  }, 
+  "cm_description": "person", 
+  "cm_display_as_alias": "person", 
+  "powered_by": {
+    "version": "1.0.1977.beta", 
+    "name": "Collective Mind Engine"
+  }, 
+  "cm_updated": [
+    {
+      "cm_iso_datetime": "2012-03-29T17:14:48.923000", 
+      "cm_note": "", 
+      "cm_module_uid": "5fa7f671fd112e70", 
+      "cm_user_uoa": "0728a400aa1c86fe"
+    }
+  ], 
+  "authors": [
+    "0728a400aa1c86fe"
+  ], 
+  "url_module": "", 
+  "cm_module_py_ext": "module"
+}

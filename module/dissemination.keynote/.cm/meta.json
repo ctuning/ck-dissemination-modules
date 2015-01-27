@@ -1,0 +1,36 @@
+{
+  "cm_actions": [], 
+  "cm_dependencies": {
+    "classes": []
+  }, 
+  "license": "", 
+  "cm_module_py_dir": "", 
+  "cm_modules": {
+    "cm_core": "9ac54cef3d7caa8a"
+  }, 
+  "cm_classes_uoa": [], 
+  "cm_properties": {}, 
+  "cm_access_control": {
+    "read_groups": "all", 
+    "comments_groups": "registered", 
+    "write_groups": "owner"
+  }, 
+  "cm_data_description": {}, 
+  "cm_display_as_alias": "Dissemination - Keynote", 
+  "powered_by": {
+    "version": "1.0.2015.beta", 
+    "name": "Collective Mind Engine"
+  }, 
+  "cm_updated": [
+    {
+      "cm_iso_datetime": "2013-08-29T10:07:20.473000", 
+      "cm_person_uoa": "c6642a5b007574c2", 
+      "cm_user_uoa": "c6642a5b007574c2", 
+      "cm_module_uid": "5fa7f671fd112e70"
+    }
+  ], 
+  "authors": [], 
+  "url_module": "", 
+  "cm_module_py_ext": "module", 
+  "cm_dissemination": {}
+}

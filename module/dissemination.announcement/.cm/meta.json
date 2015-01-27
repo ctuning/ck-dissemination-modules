@@ -1,0 +1,34 @@
+{
+  "cm_actions": [], 
+  "cm_common_actions": [], 
+  "license": "cM 1.x license", 
+  "cm_module_py_dir": "", 
+  "cm_modules": {
+    "cm-core": "9ac54cef3d7caa8a"
+  }, 
+  "cm_access_control": {
+    "read_groups": "admin", 
+    "comments_groups": "admin", 
+    "write_groups": "admin"
+  }, 
+  "cm_data_description": {}, 
+  "cm_description": "news", 
+  "cm_display_as_alias": "news", 
+  "powered_by": {
+    "version": "1.0.1977.beta", 
+    "name": "Collective Mind Engine"
+  }, 
+  "cm_updated": [
+    {
+      "cm_iso_datetime": "2012-06-07T21:56:21.851000", 
+      "cm_note": "", 
+      "cm_module_uid": "5fa7f671fd112e70", 
+      "cm_user_uoa": "74c2480dcec9e85d"
+    }
+  ], 
+  "authors": [
+    "4b7a88c4b5c72223"
+  ], 
+  "url_module": "", 
+  "cm_module_py_ext": "module"
+}
