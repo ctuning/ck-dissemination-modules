@@ -1,14 +1,23 @@
 {
   "control": {
-    "engine": "CK", 
-    "version": [
-      "0", 
-      "9", 
-      "4113"
-    ], 
-    "iso_datetime": "2014-12-06T15:37:45.140000"
+    "engine": "CM", 
+    "version": [], 
+    "iso_datetime": "2012-06-07T21:56:46.769000", 
+    "author_uoa": "74c2480dcec9e85d"
   }, 
-  "backup_module_uoa": "module", 
-  "data_name": "dissemination workshop", 
-  "backup_module_uid": "e9a4bb5e10b91e40"
+  "description": "workshops", 
+  "backup_module_uid": "e9a4bb5e10b91e40", 
+  "cm_outdated": {
+    "powered_by": {
+      "version": "1.0.1977.beta", 
+      "name": "Collective Mind Engine"
+    }, 
+    "cm_access_control": {
+      "read_groups": "admin", 
+      "comments_groups": "admin", 
+      "write_groups": "admin"
+    }
+  }, 
+  "data_name": "Dissemination - workshop", 
+  "backup_module_uoa": "module"
 }

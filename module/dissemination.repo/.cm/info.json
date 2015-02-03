@@ -1,14 +1,22 @@
 {
   "control": {
-    "engine": "CK", 
-    "version": [
-      "0", 
-      "9", 
-      "4113"
-    ], 
-    "iso_datetime": "2014-12-06T15:37:44.906000"
+    "engine": "CM", 
+    "version": [], 
+    "iso_datetime": "2013-08-28T15:15:28.234000", 
+    "author_uoa": "c6642a5b007574c2"
   }, 
   "backup_module_uoa": "module", 
-  "data_name": "dissemination repo", 
+  "data_name": "Dissemination - repo", 
+  "cm_outdated": {
+    "powered_by": {
+      "version": "1.0.2015.beta", 
+      "name": "Collective Mind Engine"
+    }, 
+    "cm_access_control": {
+      "read_groups": "all", 
+      "comments_groups": "registered", 
+      "write_groups": "owner"
+    }
+  }, 
   "backup_module_uid": "e9a4bb5e10b91e40"
 }

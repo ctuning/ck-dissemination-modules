@@ -10,31 +10,7 @@
   }, 
   "cm_classes_uoa": [], 
   "cm_properties": {}, 
-  "cm_access_control": {
-    "read_groups": "registered", 
-    "comments_groups": "registered", 
-    "write_groups": "owner"
-  }, 
   "cm_data_description": {}, 
-  "cm_display_as_alias": "Dissemination - Pitfall/Suggestion", 
-  "powered_by": {
-    "version": "1.0.2318.beta", 
-    "name": "Collective Mind Engine"
-  }, 
-  "cm_updated": [
-    {
-      "cm_iso_datetime": "2013-11-02T22:37:12.346000", 
-      "cm_person_uoa": "0728a400aa1c86fe", 
-      "cm_user_uoa": "0728a400aa1c86fe", 
-      "cm_module_uid": "5fa7f671fd112e70"
-    }, 
-    {
-      "cm_iso_datetime": "2013-11-02T22:37:19.797000", 
-      "cm_person_uoa": "0728a400aa1c86fe", 
-      "cm_user_uoa": "0728a400aa1c86fe", 
-      "cm_module_uid": "5fa7f671fd112e70"
-    }
-  ], 
   "authors": [], 
   "url_module": "", 
   "cm_module_py_ext": "module", 

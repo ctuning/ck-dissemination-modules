@@ -6,11 +6,6 @@
   "cm_modules": {
     "cm-core": "9ac54cef3d7caa8a"
   }, 
-  "cm_access_control": {
-    "read_groups": "all", 
-    "comments_groups": "admin", 
-    "write_groups": "admin"
-  }, 
   "cm_data_description": {
     "##urls@$": {
       "default_value": "", 
@@ -45,20 +40,6 @@
       "type": "text"
     }
   }, 
-  "cm_description": "organization", 
-  "cm_display_as_alias": "organization", 
-  "powered_by": {
-    "version": "1.0.1977.beta", 
-    "name": "Collective Mind Engine"
-  }, 
-  "cm_updated": [
-    {
-      "cm_iso_datetime": "2012-06-07T22:03:29.378000", 
-      "cm_note": "", 
-      "cm_module_uid": "5fa7f671fd112e70", 
-      "cm_user_uoa": "74c2480dcec9e85d"
-    }
-  ], 
   "authors": [
     "0728a400aa1c86fe"
   ], 

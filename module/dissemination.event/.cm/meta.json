@@ -19,29 +19,10 @@
   "cm_modules": {
     "person": "b0743a4044480ead", 
     "qr-code": "6a89ff344f0973a7", 
-    "choice": "339244b9d9818161", 
-    "cm-core": "9ac54cef3d7caa8a"
-  }, 
-  "cm_access_control": {
-    "read_groups": "all", 
-    "comments_groups": "admin", 
-    "write_groups": "admin"
+    "cm-core": "9ac54cef3d7caa8a", 
+    "choice": "339244b9d9818161"
   }, 
   "cm_module_py_ext": "module", 
-  "cm_description": "event", 
-  "cm_display_as_alias": "Dissemination - Event", 
-  "powered_by": {
-    "version": "1.0.1977.beta", 
-    "name": "Collective Mind Engine"
-  }, 
-  "cm_updated": [
-    {
-      "cm_iso_datetime": "2012-06-07T21:27:48.228000", 
-      "cm_note": "", 
-      "cm_module_uid": "5fa7f671fd112e70", 
-      "cm_user_uoa": "74c2480dcec9e85d"
-    }
-  ], 
   "authors": [
     "0728a400aa1c86fe"
   ], 
