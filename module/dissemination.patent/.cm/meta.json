@@ -1,15 +1,15 @@
 {
-  "cm_actions": [], 
-  "cm_common_actions": [], 
-  "license": "cM 1.x license", 
-  "cm_module_py_dir": "", 
-  "cm_modules": {
-    "cm-core": "9ac54cef3d7caa8a"
-  }, 
-  "cm_data_description": {}, 
   "authors": [
     "4b7a88c4b5c72223"
   ], 
-  "url_module": "", 
-  "cm_module_py_ext": "module"
+  "cm_actions": [], 
+  "cm_common_actions": [], 
+  "cm_data_description": {}, 
+  "cm_module_py_dir": "", 
+  "cm_module_py_ext": "module", 
+  "cm_modules": {
+    "cm-core": "9ac54cef3d7caa8a"
+  }, 
+  "license": "cM 1.x license", 
+  "url_module": ""
 }

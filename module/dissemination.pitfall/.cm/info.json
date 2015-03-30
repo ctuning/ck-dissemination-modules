@@ -1,22 +1,23 @@
 {
-  "control": {
-    "engine": "CM", 
-    "version": [], 
-    "iso_datetime": "2013-11-02T22:37:12.346000", 
-    "author_uoa": "0728a400aa1c86fe"
-  }, 
+  "backup_data_uid": "2e93ded4c029ff9f", 
+  "backup_module_uid": "e9a4bb5e10b91e40", 
   "backup_module_uoa": "module", 
-  "data_name": "Dissemination - pitfall", 
   "cm_outdated": {
-    "powered_by": {
-      "version": "1.0.2318.beta", 
-      "name": "Collective Mind Engine"
-    }, 
     "cm_access_control": {
-      "read_groups": "registered", 
       "comments_groups": "registered", 
+      "read_groups": "registered", 
       "write_groups": "owner"
+    }, 
+    "powered_by": {
+      "name": "Collective Mind Engine", 
+      "version": "1.0.2318.beta"
     }
   }, 
-  "backup_module_uid": "e9a4bb5e10b91e40"
+  "control": {
+    "author_uoa": "0728a400aa1c86fe", 
+    "engine": "CM", 
+    "iso_datetime": "2013-11-02T22:37:12.346000", 
+    "version": []
+  }, 
+  "data_name": "dissemination.pitfall"
 }

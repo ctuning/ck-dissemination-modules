@@ -1,18 +1,18 @@
 {
+  "authors": [], 
   "cm_actions": [], 
+  "cm_classes_uoa": [], 
+  "cm_data_description": {}, 
   "cm_dependencies": {
     "classes": []
   }, 
-  "license": "", 
+  "cm_dissemination": {}, 
   "cm_module_py_dir": "", 
+  "cm_module_py_ext": "module", 
   "cm_modules": {
     "cm_core": "9ac54cef3d7caa8a"
   }, 
-  "cm_classes_uoa": [], 
   "cm_properties": {}, 
-  "cm_data_description": {}, 
-  "authors": [], 
-  "url_module": "", 
-  "cm_module_py_ext": "module", 
-  "cm_dissemination": {}
+  "license": "", 
+  "url_module": ""
 }

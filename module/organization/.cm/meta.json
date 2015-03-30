@@ -1,48 +1,48 @@
 {
+  "authors": [
+    "0728a400aa1c86fe"
+  ], 
   "cm_actions": [], 
   "cm_common_actions": [], 
-  "license": "cM 1.x license", 
-  "cm_module_py_dir": "", 
-  "cm_modules": {
-    "cm-core": "9ac54cef3d7caa8a"
-  }, 
   "cm_data_description": {
-    "##urls@$": {
-      "default_value": "", 
-      "type": "url"
-    }, 
-    "##urls": {
-      "type_next": "values", 
-      "desc_text": "organizaton URLs", 
-      "type": "list", 
-      "skip_next_desc": "yes"
-    }, 
-    "##type": {
-      "has_choice": "yes", 
-      "desc_text": "type", 
-      "type": "text", 
-      "choice": [
-        "university", 
-        "company", 
-        "governmental organization"
-      ]
-    }, 
     "##abbreviation": {
       "desc_text": "abbreviation", 
+      "type": "text"
+    }, 
+    "##country": {
+      "desc_text": "country", 
       "type": "text"
     }, 
     "##name": {
       "desc_text": "name", 
       "type": "text"
     }, 
-    "##country": {
-      "desc_text": "country", 
+    "##type": {
+      "choice": [
+        "university", 
+        "company", 
+        "governmental organization"
+      ], 
+      "desc_text": "type", 
+      "has_choice": "yes", 
       "type": "text"
+    }, 
+    "##urls": {
+      "desc_text": "organizaton URLs", 
+      "skip_next_desc": "yes", 
+      "type": "list", 
+      "type_next": "values"
+    }, 
+    "##urls@$": {
+      "default_value": "", 
+      "type": "url"
     }
   }, 
-  "authors": [
-    "0728a400aa1c86fe"
-  ], 
-  "url_module": "", 
-  "cm_module_py_ext": "module"
+  "cm_module_py_dir": "", 
+  "cm_module_py_ext": "module", 
+  "cm_modules": {
+    "cm-core": "9ac54cef3d7caa8a"
+  }, 
+  "license": "cM 1.x license", 
+  "url_module": ""
 }

@@ -1,30 +1,30 @@
 {
-  "cm_actions": [
-    {
-      "params": "", 
-      "cm_index": "generate", 
-      "func": "generate", 
-      "desc": "generate"
-    }, 
-    {
-      "params": "", 
-      "cm_index": "summary", 
-      "func": "summary", 
-      "desc": "summary"
-    }
-  ], 
-  "cm_common_actions": [], 
-  "license": "cM 1.x license", 
-  "cm_module_py_dir": "", 
-  "cm_modules": {
-    "person": "b0743a4044480ead", 
-    "qr-code": "6a89ff344f0973a7", 
-    "cm-core": "9ac54cef3d7caa8a", 
-    "choice": "339244b9d9818161"
-  }, 
-  "cm_module_py_ext": "module", 
   "authors": [
     "0728a400aa1c86fe"
   ], 
+  "cm_actions": [
+    {
+      "cm_index": "generate", 
+      "desc": "generate", 
+      "func": "generate", 
+      "params": ""
+    }, 
+    {
+      "cm_index": "summary", 
+      "desc": "summary", 
+      "func": "summary", 
+      "params": ""
+    }
+  ], 
+  "cm_common_actions": [], 
+  "cm_module_py_dir": "", 
+  "cm_module_py_ext": "module", 
+  "cm_modules": {
+    "choice": "339244b9d9818161", 
+    "cm-core": "9ac54cef3d7caa8a", 
+    "person": "b0743a4044480ead", 
+    "qr-code": "6a89ff344f0973a7"
+  }, 
+  "license": "cM 1.x license", 
   "url_module": ""
 }
