@@ -1,23 +1,23 @@
 {
-  "backup_data_uid": "d4ce48c4e757ae23", 
-  "backup_module_uid": "032630d041b4fd8a", 
-  "backup_module_uoa": "module", 
+  "backup_data_uid": "d4ce48c4e757ae23",
+  "backup_module_uid": "032630d041b4fd8a",
+  "backup_module_uoa": "module",
   "cm_outdated": {
     "cm_access_control": {
-      "comments_groups": "registered", 
-      "read_groups": "all", 
+      "comments_groups": "registered",
+      "read_groups": "all",
       "write_groups": "owner"
-    }, 
+    },
     "powered_by": {
-      "name": "Collective Mind Engine", 
+      "name": "Collective Mind Engine",
       "version": "1.0.2015.beta"
     }
-  }, 
+  },
   "control": {
-    "author_uoa": "c6642a5b007574c2", 
-    "engine": "CM", 
-    "iso_datetime": "2013-08-29T10:07:20.473000", 
+    "author_uoa": "c6642a5b007574c2",
+    "engine": "CM",
+    "iso_datetime": "2013-08-29T10:07:20.473000",
     "version": []
-  }, 
+  },
   "data_name": "dissemination.keynote"
 }

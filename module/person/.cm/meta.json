@@ -1,62 +1,62 @@
 {
   "authors": [
     "0728a400aa1c86fe"
-  ], 
-  "cm_actions": [], 
-  "cm_common_actions": [], 
+  ],
+  "cm_actions": [],
+  "cm_common_actions": [],
   "cm_data_description": {
     "##cm_email": {
-      "desc_text": "email", 
-      "sort_index": "5", 
+      "desc_text": "email",
+      "sort_index": "5",
       "type": "email"
-    }, 
+    },
     "##job_organization": {
-      "desc_text": "job organization(s)", 
-      "skip_next_desc": "yes", 
-      "sort_index": "7", 
-      "type": "list", 
+      "desc_text": "job organization(s)",
+      "skip_next_desc": "yes",
+      "sort_index": "7",
+      "type": "list",
       "type_next": "values"
-    }, 
+    },
     "##job_organization@$": {
-      "cm_module_uoa": "3594786b07dc710d", 
+      "cm_module_uoa": "3594786b07dc710d",
       "type": "uoa"
-    }, 
+    },
     "##job_title": {
-      "desc_text": "job title", 
-      "sort_index": "6", 
+      "desc_text": "job title",
+      "sort_index": "6",
       "type": "text"
-    }, 
+    },
     "##name": {
-      "desc_text": "full name", 
-      "sort_index": "1", 
+      "desc_text": "full name",
+      "sort_index": "1",
       "type": "text"
-    }, 
+    },
     "##personal_web_page": {
-      "desc_text": "personal web page", 
-      "sort_index": "15", 
+      "desc_text": "personal web page",
+      "sort_index": "15",
       "type": "url"
-    }, 
+    },
     "##professional_web_page": {
-      "desc_text": "professional web page", 
-      "sort_index": "10", 
+      "desc_text": "professional web page",
+      "sort_index": "10",
       "type": "url"
-    }, 
+    },
     "##publications": {
-      "desc_text": "publications", 
-      "skip_next_desc": "yes", 
-      "type": "list", 
+      "desc_text": "publications",
+      "skip_next_desc": "yes",
+      "type": "list",
       "type_next": "values"
-    }, 
+    },
     "##publications@$": {
-      "cm_module_uoa": "29db2248aba45e59", 
+      "cm_module_uoa": "29db2248aba45e59",
       "type": "uoa"
     }
-  }, 
-  "cm_module_py_dir": "", 
-  "cm_module_py_ext": "module", 
+  },
+  "cm_module_py_dir": "",
+  "cm_module_py_ext": "module",
   "cm_modules": {
     "cm-core": "9ac54cef3d7caa8a"
-  }, 
-  "license": "cM 1.x license", 
+  },
+  "license": "cM 1.x license",
   "url_module": ""
 }

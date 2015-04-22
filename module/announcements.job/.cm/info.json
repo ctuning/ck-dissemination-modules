@@ -1,24 +1,24 @@
 {
-  "backup_data_uid": "0c11d352a54712a5", 
-  "backup_module_uid": "032630d041b4fd8a", 
-  "backup_module_uoa": "module", 
+  "backup_data_uid": "0c11d352a54712a5",
+  "backup_module_uid": "032630d041b4fd8a",
+  "backup_module_uoa": "module",
   "cm_outdated": {
     "cm_access_control": {
-      "comments_groups": "admin", 
-      "read_groups": "admin", 
+      "comments_groups": "admin",
+      "read_groups": "admin",
       "write_groups": "admin"
-    }, 
+    },
     "powered_by": {
-      "name": "Collective Mind Engine", 
+      "name": "Collective Mind Engine",
       "version": "1.0.1977.beta"
     }
-  }, 
+  },
   "control": {
-    "author_uoa": "74c2480dcec9e85d", 
-    "engine": "CM", 
-    "iso_datetime": "2012-06-07T22:08:51.807000", 
+    "author_uoa": "74c2480dcec9e85d",
+    "engine": "CM",
+    "iso_datetime": "2012-06-07T22:08:51.807000",
     "version": []
-  }, 
-  "data_name": "announcements.job", 
+  },
+  "data_name": "announcements.job",
   "description": "jobs"
 }

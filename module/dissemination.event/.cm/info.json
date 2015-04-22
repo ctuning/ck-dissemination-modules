@@ -1,24 +1,24 @@
 {
-  "backup_data_uid": "77154d189d2e226c", 
-  "backup_module_uid": "032630d041b4fd8a", 
-  "backup_module_uoa": "module", 
+  "backup_data_uid": "77154d189d2e226c",
+  "backup_module_uid": "032630d041b4fd8a",
+  "backup_module_uoa": "module",
   "cm_outdated": {
     "cm_access_control": {
-      "comments_groups": "admin", 
-      "read_groups": "all", 
+      "comments_groups": "admin",
+      "read_groups": "all",
       "write_groups": "admin"
-    }, 
+    },
     "powered_by": {
-      "name": "Collective Mind Engine", 
+      "name": "Collective Mind Engine",
       "version": "1.0.1977.beta"
     }
-  }, 
+  },
   "control": {
-    "author_uoa": "74c2480dcec9e85d", 
-    "engine": "CM", 
-    "iso_datetime": "2012-06-07T21:27:48.228000", 
+    "author_uoa": "74c2480dcec9e85d",
+    "engine": "CM",
+    "iso_datetime": "2012-06-07T21:27:48.228000",
     "version": []
-  }, 
-  "data_name": "dissemination.event", 
+  },
+  "data_name": "dissemination.event",
   "description": "event"
 }
