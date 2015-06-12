@@ -52,6 +52,7 @@ def html_viewer(i):
        if rx['return']>0: return rx
 
        dd=rx['dict']
+       duid=rx['data_uid']
 
        name=dd.get('name','')
 
@@ -107,7 +108,6 @@ def html_viewer(i):
        h+='     <table border="0" cellpadding="3">\n'
 
 
-
        if email!='':
           h+='      <tr><td valign="top"><b>EMail:</b></td><td valign="top">\n'
           h+='        <a href="mailto:'+email+'">'+email+'</a>\n'
@@ -130,6 +130,32 @@ def html_viewer(i):
 
        h+=' </tr>\n'
        h+='</table>\n'
+
+       ####################### List publications
+       h+='   <hr class="ck_hr">\n'
+       urlx1=burl+'wcid=dissemination.keynote:&search='+duid
+       h+='   <span id="ck_text51"><b>Keynotes: </b><a href="'+urlx1+'">[&nbsp;search in CK&nbsp;]</a></span><br>\n'
+
+       urlx1=burl+'wcid=dissemination.publication:&search='+duid
+       h+='   <span id="ck_text51"><b>Publications: </b><a href="'+urlx1+'">[&nbsp;search in CK&nbsp;]</a></span><br>\n'
+
+       urlx1=burl+'wcid=dissemination.publication.artifact:&search='+duid
+       h+='   <span id="ck_text51"><b>Artifacts for publications: </b><a href="'+urlx1+'">[&nbsp;search in CK&nbsp;]</a></span><br>\n'
+
+       urlx1=burl+'wcid=dissemination.lecture:&search='+duid
+       h+='   <span id="ck_text51"><b>Lectures: </b><a href="'+urlx1+'">[&nbsp;search in CK&nbsp;]</a></span><br>\n'
+
+       urlx1=burl+'wcid=dissemination.event:&search='+duid
+       h+='   <span id="ck_text51"><b>Events: </b><a href="'+urlx1+'">[&nbsp;search in CK&nbsp;]</a></span><br>\n'
+
+       urlx1=burl+'wcid=dissemination.soft:&search='+duid
+       h+='   <span id="ck_text51"><b>Developed software: </b><a href="'+urlx1+'">[&nbsp;search in CK&nbsp;]</a></span><br>\n'
+
+       urlx1=burl+'wcid=dissemination.hardware:&search='+duid
+       h+='   <span id="ck_text51"><b>Developed hardware: </b><a href="'+urlx1+'">[&nbsp;search in CK&nbsp;]</a></span><br>\n'
+
+       urlx1=burl+'wcid=dissemination.repo:&search='+duid
+       h+='   <span id="ck_text51"><b>Shared repositories: </b><a href="'+urlx1+'">[&nbsp;search in CK&nbsp;]</a></span><br>\n'
 
 
     return {'return':0, 'raw':raw, 'show_top':top, 'html':h}
