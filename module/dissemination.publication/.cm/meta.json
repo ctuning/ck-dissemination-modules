@@ -2,9 +2,13 @@
   "actions": {
     "generate": {
       "desc": "generate title"
+    }, 
+    "html_viewer": {
+      "desc": "viewing entry as html", 
+      "for_web": "yes"
     }
-  },
-  "desc": "Dissemination - publication",
-  "developer": "Grigori Fursin",
+  }, 
+  "desc": "Dissemination - publication", 
+  "developer": "Grigori Fursin", 
   "license": "CK 1.x license"
 }
