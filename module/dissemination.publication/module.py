@@ -138,7 +138,7 @@ def html_viewer(i):
 
     h=''
     raw='no'
-    top='yes'
+    top='no'
 
     duoa=i['data_uoa']
     burl=i['url_base']
