@@ -50,16 +50,21 @@ def generate(i):
        ck.out('Academic promotion is still often based on a total number of publications')
        ck.out('rather than novelty, usefulness, statistical meaningfulness, availability of code and data,')
        ck.out('and reproducibility of experimental results.')
-       ck.out('Therefore, we decided to help some of our academic colleagues and created this customizable ')
+
+       ck.out('')
+       ck.out('Therefore, some years ago, we decided to help some of our academic colleagues and created this customizable ')
 
        x=''
-       x+='Collective Mind module'
+       x+='Collective Knowledge module'
        ck.out(x+' to automatically generate research topics in computer engineering') 
        ck.out('useful for grant proposals, PhD/MS theses, "low hanging fruit" and incremental articles.')
 
+       ck.out('')
        ck.out('We hope it will be very appreciated by our community ;) !')
+
+       ck.out('')
        ck.out('It should also continue making all reviewers and readers very happy')
-       ck.out('with numerous and exciting articles!')
+       ck.out('with all those numerous and exciting articles!')
 
     du=i.get('data_uoa','')
     if du=='': 
