@@ -31,6 +31,7 @@ def generate(i):
     Input:  {
               data_uoa   - data with topic template
               (repo_uoa) - repository
+              (html)     - if 'yes', force html
             }
 
     Output: {
@@ -43,33 +44,35 @@ def generate(i):
 
     o=i.get('out','')
 
+    html=False
+    if i.get('html','')=='yes': html=True
+
     on=''
-    if o=='html': on='<br><br>'
+    if html: on='<br><br>'
 
-    if o!='json':
-       x='This is a beta version of a research topic generator!'
-       if o=='html': x='<b>'+x+'</b>'
-       ck.out(x)
-       ck.out(on)
+    txt=''
 
-       ck.out('Academic promotion is still often based on a total number of publications')
-       ck.out('rather than novelty, usefulness, statistical meaningfulness, availability of code and data,')
-       ck.out('and reproducibility of experimental results.')
+    x='This is a beta version of a research topic generator!'
+    if html: x='<b>'+x+'</b>'
+    txt+=x+'\n'
+    txt+=on+'\n'
 
-       ck.out(on)
-       ck.out('Therefore, some years ago, we decided to help some of our academic colleagues and created this customizable ')
+    txt+='Academic promotion is still often based on a total number of publications'+'\n'
+    txt+='rather than novelty, usefulness, statistical meaningfulness, availability of code and data,'+'\n'
+    txt+='and reproducibility of experimental results.'+'\n'
 
-       x=''
-       x+='Collective Knowledge module'
-       ck.out(x+' to automatically generate research topics in computer engineering') 
-       ck.out('useful for grant proposals, PhD/MS theses, "low hanging fruit" and incremental articles.')
+    txt+=on+'\n'
+    txt+='Therefore, some years ago, we decided to help some of our academic colleagues and created this customizable '+'\n'
 
-       ck.out(on)
-       ck.out('We hope it will be very appreciated by our community ;) !')
+    x=''
+    x+='Collective Knowledge module'
+    txt+=x+' to automatically generate research topics in computer engineering'+'\n' 
+    txt+='useful for grant proposals, PhD/MS theses, "low hanging fruit" and incremental articles.'+'\n'
 
-       ck.out(on)
-       ck.out('It should also continue making all reviewers and readers very happy')
-       ck.out('with all those numerous and exciting articles!')
+    txt+=on+'\n'
+    txt+='We hope it will be very appreciated by our community ;) !'+'\n'
+    txt+='It should also continue making all reviewers and readers very happy'+'\n'
+    txt+='with all those numerous and exciting articles!'+'\n'
 
     du=i.get('data_uoa','')
     if du=='': 
@@ -100,19 +103,49 @@ def generate(i):
            l=random.randint(0,ll-1)
            s+=c[l]
 
-    if o!='json':
-       ck.out(on)
-       ck.out('Generated topic:')
-       ck.out(on)
+    txt+=on+'\n'
+    x='Generated topic:'
+    if html: x='<b>'+x+'</b>'
+    txt+=x+'\n'
+    txt+=on+'\n'
 
-       ck.out(s)
+    if html: txt+='<i><span style="color:#7f0000;">'
+    x=s
+    if html: x='<b>'+s+'</b>'
+    txt+=x+'\n'
+    if html: txt+='</span></i>'
 
-       ck.out(on)
-       ck.out('Simply restart this module to generate new exciting topic')
-       ck.out('  or alternatively check out our manifesto at http://c-mind.org/reproducibility')
-       ck.out('  on reproducibility in computer engineering!')
+    x1='wiki'
+    if html: x1='<a href="http://cknowledge.org/reproducibility">'+x1+'</a>'
+    else: x1+=' (cknowledge.org/reproducibility)'
 
-    return {'return':0, 'string':s}
+    x2='open-source framework and repository'
+    if html: x2='<a href="http://github.com/ctuning/ck">'+x2+'</a>'
+    else: x2+=' (github.com/ctuning/ck)'
+
+    x3='new publication model'
+    if html: x3='<a href="https://hal.inria.fr/hal-01006563">'+x3+'</a>'
+    else: x3+=' (hal.inria.fr/hal-01006563)'
+
+    txt+=on+'\n'
+    txt+='Simply restart this module to generate next exciting topic\n'
+    txt+='  or alternatively check out our '+x1+', '+x2+', and '+x3+' to enable systematic, collaborative and reproducible R&D.\n'
+
+    if html:
+       txt+='<hr>\n'
+       txt+='You can even automate generation of these topics from CMD using our <a href="http://github.com/ctuning/ck">CK</a> framework:<br>\n'
+       txt+='&nbsp;&nbsp;>&nbsp;ck pull repo:ck-dissemination --url=https://github.com/gfursin/ck-dissemination.git<br>\n'
+       txt+='&nbsp;&nbsp;>&nbsp;ck generate dissemination.publication:template-joke<br>\n'
+       
+    # Output if not JSON
+    if o!='json' and o!='json_file':
+       ck.out(txt)
+
+    r={'return':0}
+    if html: r['html']=txt
+    else: r['string']=s
+
+    return r
 
 ##############################################################################
 # viewing entry as html
