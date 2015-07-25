@@ -136,6 +136,20 @@ def generate(i):
        txt+='You can even automate generation of these topics from CMD using our <a href="http://github.com/ctuning/ck">CK</a> framework:<br>\n'
        txt+='&nbsp;&nbsp;>&nbsp;ck pull repo:ck-dissemination --url=https://github.com/gfursin/ck-dissemination.git<br>\n'
        txt+='&nbsp;&nbsp;>&nbsp;ck generate dissemination.publication:template-joke<br>\n'
+
+    if html:
+       txt+='<br><br><small><i>\n'
+
+    txt+='Powered by Collective Knowledge, (C)opyright '
+
+    if html='<a href="http://fursin.net/research">'
+    txt+='Grigori Fursin'
+    if html='</a>'
+
+    txt+=', 2012-2015\n'
+
+    if html:
+       txt+='</i></small>\n'
        
     # Output if not JSON
     if o!='json' and o!='json_file':
