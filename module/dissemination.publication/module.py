@@ -144,9 +144,9 @@ def generate(i):
 
     txt+='Powered by Collective Knowledge, (C)opyright '
 
-    if html='<a href="http://fursin.net/research">'
+    if html: txt+='<a href="http://fursin.net/research">'
     txt+='Grigori Fursin'
-    if html='</a>'
+    if html: txt+='</a>'
 
     txt+=', 2012-2015\n'
 
