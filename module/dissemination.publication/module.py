@@ -70,9 +70,11 @@ def generate(i):
     txt+='useful for grant proposals, PhD/MS theses, "low hanging fruit" and incremental articles.'+'\n'
 
     txt+=on+'\n'
-    txt+='We hope it will be very appreciated by our community ;) !'+'\n'
-    txt+='It should also continue making all reviewers and readers very happy'+'\n'
-    txt+='with all those numerous and exciting articles!'+'\n'
+    txt+='We hope it will be very appreciated by our community ;) !\n'
+    txt+='It should also continue making all reviewers and readers very happy\n'
+    txt+='with all those numerous and exciting articles!\n'
+    txt+='We also found that it is even possible to predict which papers will be published\n'
+    txt+='within next few years (our observations started from 2012 are surprisingly correct)!\n'
 
     du=i.get('data_uoa','')
     if du=='': 
