@@ -1,16 +1,10 @@
 {
-  "authors": [
-    "0728a400aa1c86fe"
-  ],
-  "cm_actions": [
-    {
-      "cm_index": "generate",
-      "desc": "generate",
-      "func": "generate",
-      "params": ""
-    }
-  ],
-  "cm_common_actions": [],
+  "copyright": "See CK Copyright.txt for copyright details", 
+  "desc": "dissemination: artifacts along with publications", 
+  "developer": "Grigori Fursin", 
+  "developer_email": "Grigori.Fursin@cTuning.org", 
+  "developer_webpage": "http://cTuning.org/lab/people/gfursin", 
+  "license": "See CK LICENSE.txt for licensing details",
   "cm_data_description": {
     "##authors": {
       "desc_text": "authors",
@@ -60,12 +54,5 @@
       "sort_index": "1",
       "type": "text"
     }
-  },
-  "cm_module_py_dir": "",
-  "cm_module_py_ext": "module",
-  "cm_modules": {
-    "choice": "339244b9d9818161",
-    "cm-core": "9ac54cef3d7caa8a"
-  },
-  "license": "cM 1.x license"
+  }
 }

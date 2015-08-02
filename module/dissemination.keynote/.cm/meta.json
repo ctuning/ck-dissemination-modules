@@ -1,18 +1,8 @@
 {
-  "authors": [],
-  "cm_actions": [],
-  "cm_classes_uoa": [],
-  "cm_data_description": {},
-  "cm_dependencies": {
-    "classes": []
-  },
-  "cm_dissemination": {},
-  "cm_module_py_dir": "",
-  "cm_module_py_ext": "module",
-  "cm_modules": {
-    "cm_core": "9ac54cef3d7caa8a"
-  },
-  "cm_properties": {},
-  "license": "",
-  "url_module": ""
+  "copyright": "See CK Copyright.txt for copyright details", 
+  "desc": "dissemination: keynotes", 
+  "developer": "Grigori Fursin", 
+  "developer_email": "Grigori.Fursin@cTuning.org", 
+  "developer_webpage": "http://cTuning.org/lab/people/gfursin", 
+  "license": "See CK LICENSE.txt for licensing details"
 }
