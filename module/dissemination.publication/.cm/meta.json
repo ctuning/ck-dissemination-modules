@@ -1,4 +1,10 @@
 {
+  "actions": {
+    "generate": {
+      "desc": "generate research paper title", 
+      "for_web": "yes"
+    }
+  }, 
   "copyright": "See CK Copyright.txt for copyright details", 
   "desc": "dissemination: publications (can be interactive)", 
   "developer": "Grigori Fursin", 
