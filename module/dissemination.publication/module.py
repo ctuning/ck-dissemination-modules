@@ -239,11 +239,29 @@ def html_viewer(i):
           affs=dd.get('affiliations',{})
           cauthor=dd.get('cor_author_email','')
 
+          when=dd.get('when','')
+          where=dd.get('where','')
+          where_url=dd.get('where_url','')
+          if where!='' and where_url!='':
+             where='<a href="'+where_url+'">'+where+'</a>'
+
+          appeared=where
+          if when!='':
+             if appeared!='': appeared+=', '
+             appeared+=when
+
           h+='<div id="ck_entries">\n'
        
           h+='<center><span id="ck_article_title">'+title+'</span><br>'
 
+          if appeared!='':
+             h+='<div id="ck_entries_space4"></div>\n'
+             h+='<span id="ck_article_authors" style="font-style: normal;">\n'
+             h+=appeared+'\n'
+             h+='</span>\n'
+
           if len(authors)!='':
+             h+='<div id="ck_entries_space8"></div>\n'
              h+='<div id="ck_entries_space8"></div>\n'
              h+='<span id="ck_article_authors">\n'
 
