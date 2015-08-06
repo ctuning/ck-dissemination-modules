@@ -244,7 +244,7 @@ def html_viewer(i):
           h+='<center><span id="ck_article_title">'+title+'</span><br>'
 
           if len(authors)!='':
-             h+='<div id="ck_entries_space4"></div>\n'
+             h+='<div id="ck_entries_space8"></div>\n'
              h+='<span id="ck_article_authors">\n'
 
              x=''
@@ -253,6 +253,17 @@ def html_viewer(i):
                  aff=a.get('affiliation','')
                  url=a.get('url','')
 
+                 if ck.is_uid(name):
+                    # Name is UID, load entry
+                    r=ck.access({'action':'load',
+                                 'module_uoa':cfg['module_deps']['person'],
+                                 'data_uoa':name})
+                    if r['return']>0: return r
+                    ad=r['dict']
+
+                    name=ad.get('name','')
+
+                 name=name.replace(' ','&nbsp;')
                  if url!='': name='<a href="'+url+'">'+name+'</a>'
 
                  if x!='': x+=', '
@@ -262,15 +273,15 @@ def html_viewer(i):
              h+='</span>\n'
 
           if len(affs)>0:
-             h+='<div id="ck_entries_space4"></div>\n'
+             h+='<div id="ck_entries_space8"></div>\n'
              h+='<span id="ck_article_affiliations">\n'
 
              x=''
              for a in sorted(affs, key=int):
                  af=affs[str(a)]
-                 name=af.get('name','')
+                 name=af.get('name','').replace(' ','&nbsp;')
 
-                 if x!='': x+=',&nbsp;&nbsp;&nbsp;'
+                 if x!='': x+=', '
                  x+='<sup>'+str(a)+'</sup>&nbsp;'+name
 
              h+=x+'<br>\n'
@@ -279,15 +290,15 @@ def html_viewer(i):
           h+='</center>\n'
 
           if len(cauthor)>0:
-             h+='<div id="ck_entries_space4"></div>\n'
+             h+='<div id="ck_entries_space8"></div>\n'
              h+='<span id="ck_article_cauthor">\n'
              h+='<i>Corresponding author: <a href="mailto:'+cauthor+'">'+cauthor+'</a></i>\n'
              h+='</span>\n'
 
           if hshare!='':
-             h+='<div id="ck_entries_space4"></div>\n'
+             h+='<div id="ck_entries_space8"></div>\n'
              h+=hshare
-             h+=' <div id="ck_entries_space4"></div>\n'
+             h+=' <div id="ck_entries_space8"></div>\n'
 
           h+='<div style="text-align: right;">'
           if wurl!='':
