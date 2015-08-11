@@ -190,6 +190,11 @@ def html_viewer(i):
               return       - return code =  0, if successful
                                          >  0, if error
               (error)      - error text if return > 0
+
+              html         - generated HTML
+
+              raw          - if 'yes', output in CK raw format
+              show_top     - if 'yes', include CK top header with QR-code
             }
 
     """
