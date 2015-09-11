@@ -9,11 +9,11 @@
       "for_web": "yes"
     }
   }, 
-  "copyright": "See CK Copyright.txt for copyright details", 
+  "copyright": "See CK COPYRIGHT.txt for copyright details", 
   "desc": "dissemination: publications (can be interactive)", 
   "developer": "Grigori Fursin", 
   "developer_email": "Grigori.Fursin@cTuning.org", 
-  "developer_webpage": "http://cTuning.org/lab/people/gfursin", 
+  "developer_webpage": "http://fursin.net", 
   "license": "See CK LICENSE.txt for licensing details",
   "module_deps":{
      "person":"b0743a4044480ead"
