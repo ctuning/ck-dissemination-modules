@@ -74,7 +74,7 @@ def generate(i):
     txt+='It should also continue making all reviewers and readers very happy\n'
     txt+='with all those numerous and exciting articles!\n'
     txt+='We also found that it is even possible to predict which papers will be published\n'
-    txt+='within next few years (our observations started from 2012 are surprisingly correct)!\n'
+    txt+='within next few years (our observations for the past decade are surprisingly correct)!\n'
 
     du=i.get('data_uoa','')
     if du=='': 
@@ -94,16 +94,42 @@ def generate(i):
     # Generating topic
     s=''
 
+    selected=False
+    swn=False
+
     for q in d:
         t=q.get('text','')
+
+        p=q.get('probability','')
+        if p=='': p=1.0
+        p=float(p)
+
         c=q.get('choice',[])
 
-        if t!='':
-           s+=t
-        else:
+        # Check if select with next and previous was not selected:
+        if swn:
+           swn=False
+
+           if not selected:
+              continue
+
+        xswn=q.get('select_with_next','')
+        if xswn=='yes': swn=True
+
+        # Check to select
+        selected=False
+        x=float(random.randint(0,1000))/1000
+        if x<p:
+           selected=True
+
+        if selected:
+           if t!='':
+              s+=t
+
            ll=len(c)
-           l=random.randint(0,ll-1)
-           s+=c[l]
+           if ll>0:
+              l=random.randint(0,ll-1)
+              s+=c[l]
 
     txt+=on+'\n'
     x='Generated topic:'
@@ -114,7 +140,7 @@ def generate(i):
     if html: txt+='<i><span style="color:#7f0000;">'
     x=s
     if html: x='<b>'+s+'</b>'
-    txt+=x+'\n'
+    txt+='  '+x+'\n'
     if html: txt+='</span></i>'
 
     x1='wiki'
@@ -129,28 +155,25 @@ def generate(i):
     if html: x3='<a href="https://hal.inria.fr/hal-01006563">'+x3+'</a>'
     else: x3+=' (hal.inria.fr/hal-01006563)'
 
-    txt+=on+'\n'
-    txt+='Simply restart this module to generate next exciting topic\n'
-    txt+='  or alternatively check out our '+x1+', '+x2+', and '+x3+' to enable systematic, collaborative and reproducible R&D.\n'
-
     if html:
+       txt+=on+'\n'
+       txt+='Simply restart this module to generate next exciting topic\n'
+       txt+='or alternatively check out our '+x1+', '+x2+', and '+x3+' to enable systematic, collaborative and reproducible R&D.\n\n'
+
        txt+='<hr>\n'
        txt+='You can even automate generation of these topics from CMD using our <a href="http://github.com/ctuning/ck">CK</a> framework:<br>\n'
        txt+='&nbsp;&nbsp;>&nbsp;ck pull repo:ck-dissemination --url=https://github.com/gfursin/ck-dissemination.git<br>\n'
        txt+='&nbsp;&nbsp;>&nbsp;ck generate dissemination.publication:template-joke<br>\n'
 
-    if html:
        txt+='<br><br><small><i>\n'
 
-    txt+='Powered by Collective Knowledge, (C)opyright '
+       txt+='Powered by Collective Knowledge, (C)opyright '
 
-    if html: txt+='<a href="http://fursin.net/research">'
-    txt+='Grigori Fursin'
-    if html: txt+='</a>'
+       txt+='<a href="http://fursin.net/research">'
+       txt+='Grigori Fursin'
+       txt+='</a>'
+       txt+=', 2012-2015\n'
 
-    txt+=', 2012-2015\n'
-
-    if html:
        txt+='</i></small>\n'
        
     # Output if not JSON
