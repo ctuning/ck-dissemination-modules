@@ -2,7 +2,7 @@
   "data_uid": "62a4f46acf5ff29e", 
   "data_name": "CK dissemination modules", 
   "dict": {
-    "url": "https://github.com/gfursin/ck-dissemination-modules.git", 
+    "url": "https://github.com/ctuning/ck-dissemination-modules.git", 
     "shared": "git",
     "sync": "yes"
   }, 
