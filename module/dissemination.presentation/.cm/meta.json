@@ -1,4 +1,9 @@
 {
+  "actions": {
+    "add": {
+      "desc": "add presentation"
+    }
+  }, 
   "copyright": "See CK COPYRIGHT.txt for copyright details", 
   "desc": "dissemination: presentations", 
   "developer": "Grigori Fursin", 
