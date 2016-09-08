@@ -1,3 +1,6 @@
+* 2016.09.07 * added 'award' module to be able to preserve various awards
+               (such as Collective Knowledge Contributor) in CK repos
+
 * 2015.12.30 * moving photo/video (possible data sets) from ck-ae here
 
 * 2015.11.16 * moving ck-dissemination-modules from gfursin to ctuning
