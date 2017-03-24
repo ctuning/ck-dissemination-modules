@@ -67,18 +67,20 @@ def generate(i):
     x=''
     x+='Collective Knowledge module'
     txt+=x+' to automatically generate research topics in computer engineering'+'\n' 
-    txt+='useful for grant proposals, PhD/MS theses, "low hanging fruit" and incremental articles.'+'\n'
+    txt+='(useful for grant proposals, PhD/MS theses, "low hanging fruit" and incremental articles).'+'\n'
 
     txt+=on+'\n'
-    txt+='We hope it will be very appreciated by our community ;) !\n'
-    txt+='It should also continue making all reviewers and readers very happy\n'
-    txt+='with all those numerous and exciting articles!\n'
+    txt+='We hope it will be very appreciated by the academic community ;) !\n'
+    txt+='It should make all reviewers and readers even more happy\n'
+    txt+='when trying to process all those numerous exciting publications!\n'
     txt+='We also found that it is even possible to predict which papers will be published\n'
     txt+='within next few years (our observations for the past decade are surprisingly correct)!\n'
 
     du=i.get('data_uoa','')
-    if du=='': 
-       return {'return':1,'error':'data_uoa is not defined'}
+    if du=='': du='template-joke'
+
+#    if du=='': 
+#       return {'return':1,'error':'data_uoa is not defined'}
 
     dr=i.get('repo_uoa','')
 
