@@ -377,3 +377,117 @@ def html_viewer(i):
           h+='</div>\n'
 
     return {'return':0, 'raw':raw, 'show_top':top, 'html':h}
+
+##############################################################################
+# preprocess LaTex papers
+
+def preprocess(i):
+    """
+    Input:  {
+              doc - paper to preprocess (LaTex file)
+            }
+
+    Output: {
+              return       - return code =  0, if successful
+                                         >  0, if error
+              (error)      - error text if return > 0
+            }
+
+    """
+
+    doc=i['doc']
+
+    ck.out('')
+    ck.out('Loading document '+doc+' ...')
+
+    r=ck.load_text_file({'text_file':doc})
+    if r['return']>0: return r
+
+    s_orig=r['string']
+
+    l=s_orig.split('\n')
+    ll=len(l)
+
+    ck.out('')
+    ck.out('Processing document ...')
+
+    changed=False
+
+    cur_ck=''
+    detected=False
+
+    ck.out('')
+    j=0
+    while j<ll:
+       s=l[j]
+       j+=1
+
+       sx=s.strip()
+       if detected:
+          if sx.startswith('%'):
+             cur_ck+=sx[1:].strip()
+          else:
+             detected=False
+
+             ck.out('* Detected CK instruction:')
+
+             # Convert from JSON to dict
+             r=ck.convert_json_str_to_dict({'str':cur_ck, 'skip_quote_replacement':'yes'})
+             if r['return']>0: return r
+             ii=r['dict']
+
+             action=ii['action']
+             cid=ii['cid']
+
+             ck.out('  '+action+' '+cid+' ...')
+
+             ck.out('')
+             r=ck.access(ii)
+             if r['return']>0: return r
+
+             sub=r.get('substitute',{})
+
+             # Substituting
+             for k in sub:
+                 v='%'+k
+                 for j1 in range(j,ll):
+                     ss=l[j1]
+                     js=ss.find(v)
+                     if js>0:
+                        k1=ss.find('{')
+                        if k1>0 and ss.find('}',k1+1)>0:
+                           k2=ss.find('}',k1+1)
+                           s1=ss[:k1+1]
+                           s2=ss[k2:]
+                        else:
+                           s1=''
+                           s2=ss[js:]
+                        l[j1]=s1+sub[k]+s2
+
+                        changed=True
+
+       if sx.startswith('%CK={'):
+          cur_ck=sx[4:]
+          detected=True
+
+    if changed:
+       fbak=doc+'.bak'
+
+       ck.out('')
+       ck.out('Document changed, backing up to '+fbak+' ...')
+
+       r=ck.save_text_file({'text_file':fbak, 'string':s_orig})
+       if r['return']>0: return r
+
+       ck.out('')
+       ck.out('Updating document '+doc+' ...')
+
+       s=''
+       for x in l:
+           s+=x+'\n'
+
+       r=ck.save_text_file({'text_file':doc, 'string':s})
+       if r['return']>0: return r
+       
+
+    return {'return':0}

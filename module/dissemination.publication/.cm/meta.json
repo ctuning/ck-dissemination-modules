@@ -1,21 +1,24 @@
 {
   "actions": {
     "generate": {
-      "desc": "generate research paper title", 
+      "desc": "generate research paper title",
       "for_web": "yes"
     },
     "html_viewer": {
-      "desc": "view experiment as html", 
+      "desc": "view experiment as html",
       "for_web": "yes"
+    },
+    "preprocess": {
+      "desc": "preprocess LaTex papers"
     }
-  }, 
-  "copyright": "See CK COPYRIGHT.txt for copyright details", 
-  "desc": "dissemination: publications (can be interactive)", 
-  "developer": "Grigori Fursin", 
-  "developer_email": "Grigori.Fursin@cTuning.org", 
-  "developer_webpage": "http://fursin.net", 
+  },
+  "copyright": "See CK COPYRIGHT.txt for copyright details",
+  "desc": "dissemination: publications (can be interactive)",
+  "developer": "Grigori Fursin",
+  "developer_email": "Grigori.Fursin@cTuning.org",
+  "developer_webpage": "http://fursin.net",
   "license": "See CK LICENSE.txt for licensing details",
-  "module_deps":{
-     "person":"b0743a4044480ead"
-   }
+  "module_deps": {
+    "person": "b0743a4044480ead"
+  }
 }

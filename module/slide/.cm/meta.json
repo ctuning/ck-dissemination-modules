@@ -1,5 +1,9 @@
 {
-  "actions": {},
+  "actions": {
+    "prepare_for_latex": {
+      "desc": "prepare slide for latex"
+    }
+  },
   "copyright": "See CK COPYRIGHT.txt for copyright details",
   "desc": "individual slides",
   "developer": "Grigori Fursin",
