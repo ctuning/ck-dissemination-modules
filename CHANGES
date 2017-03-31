@@ -1,3 +1,6 @@
+* 2017.03.31 * added 'slide' to keep individual slides and their version
+               to assemble presentations and papers
+
 * 2016.09.07 * added 'award' module to be able to preserve various awards
                (such as Collective Knowledge Contributor) in CK repos
 
