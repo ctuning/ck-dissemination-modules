@@ -416,7 +416,6 @@ def preprocess(i):
     cur_ck=''
     detected=False
 
-    ck.out('')
     j=0
     while j<ll:
        s=l[j]
@@ -424,12 +423,15 @@ def preprocess(i):
 
        sx=s.strip()
        if detected:
-          if sx.startswith('%'):
+          if not cur_ck.endswith('}') and sx.startswith('%'):
              cur_ck+=sx[1:].strip()
           else:
              detected=False
 
+             ck.out('')
              ck.out('* Detected CK instruction:')
+             ck.out('')
+             ck.out('    '+cur_ck)
 
              # Convert from JSON to dict
              r=ck.convert_json_str_to_dict({'str':cur_ck, 'skip_quote_replacement':'yes'})
@@ -437,9 +439,8 @@ def preprocess(i):
              ii=r['dict']
 
              action=ii['action']
-             cid=ii['cid']
-
-             ck.out('  '+action+' '+cid+' ...')
+             cid=ii.get('cid','')
+             tp=ii.get('type','path')
 
              ck.out('')
              r=ck.access(ii)
@@ -450,21 +451,35 @@ def preprocess(i):
              # Substituting
              for k in sub:
                  v='%'+k
-                 for j1 in range(j,ll):
+                 j1=j
+                 while j1<ll:
                      ss=l[j1]
                      js=ss.find(v)
                      if js>0:
-                        k1=ss.find('{')
-                        if k1>0 and ss.find('}',k1+1)>0:
-                           k2=ss.find('}',k1+1)
-                           s1=ss[:k1+1]
-                           s2=ss[k2:]
-                        else:
-                           s1=''
-                           s2=ss[js:]
-                        l[j1]=s1+sub[k]+s2
+                        if tp=='path':
+                           k1=ss.find('{')
+                           if k1>0 and ss.find('}',k1+1)>0:
+                              k2=ss.find('}',k1+1)
+                              s1=ss[:k1+1]
+                              s2=ss[k2:]
+                           else:
+                              s1=''
+                              s2=ss[js:]
+                           l[j1]=s1+sub[k]+s2
+                        elif tp=='textlet':
+                           j1+=1
+                           l[j1]=sub[k]
+                           j1+=1
+                           while j1<len(l):
+                              if l[j1].find(v+'_END')>=0:
+                                 break
+                              del(l[j1]) 
+
+                        ll=len(l)
 
                         changed=True
+
+                     j1+=1
 
        if sx.startswith('%CK={'):
           cur_ck=sx[4:]

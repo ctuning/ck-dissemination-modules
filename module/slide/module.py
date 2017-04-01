@@ -46,6 +46,8 @@ def prepare_for_latex(i):
               return       - return code =  0, if successful
                                          >  0, if error
               (error)      - error text if return > 0
+
+              sub          - dict with substitutes for LaTeX
             }
 
     """
@@ -76,17 +78,23 @@ def prepare_for_latex(i):
     if crop=='yes':
        fn,fe=os.path.splitext(f)
        fc=fn+'-cropped'+fe
+       fcpng=fn+'-cropped.png'
+
        ppc=os.path.join(p,fc)
+       ppcpng=os.path.join(p,fcpng)
 
        if os.path.isfile(ppc):
           os.remove(ppc)
 
-       # Convert
+       # Convert to cropped pdf
        os.system('pdfcrop '+pp+' '+ppc)
 
        # Check
        if not os.path.isfile(ppc):
           return {'return':1, 'error':'cropped file was not created'}
+
+       # Convert to cropped png
+       os.system('convert -density 300 -quality 100 -scale 800 '+ppc+' '+ppcpng)
 
        pp=ppc
        f=fc
