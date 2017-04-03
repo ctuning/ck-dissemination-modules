@@ -101,7 +101,7 @@ def prepare_for_latex(i):
        f=fc
 
     # Check braces
-    if i.get('add_braces_to_file','')!='':
+    if i.get('add_braces_to_file','')=='yes':
        px=os.path.dirname(pp)
        fn,fe=os.path.splitext(f)
        pp=os.path.join(px,'{'+fn+'}'+fe)
