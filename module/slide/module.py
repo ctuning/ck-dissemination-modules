@@ -36,10 +36,11 @@ def init(i):
 def prepare_for_latex(i):
     """
     Input:  {
-              data_uoa  - slide entry
-              file      - slide file to process (in pdf)
-              (crop)    - if 'yes', crop 
-              (uid)     - env UID to substitute, if empty use filebase
+              data_uoa             - slide entry
+              file                 - slide file to process (in pdf)
+              (crop)               - if 'yes', crop 
+              (uid)                - env UID to substitute, if empty use filebase
+              (add_braces_to_file) - if 'yes', add {} to filename before extension (to allow . in filename)
             }
 
     Output: {
@@ -98,6 +99,12 @@ def prepare_for_latex(i):
 
        pp=ppc
        f=fc
+
+    # Check braces
+    if i.get('add_braces_to_file','')!='':
+       px=os.path.dirname(pp)
+       fn,fe=os.path.splitext(f)
+       pp=os.path.join(px,'{'+fn+'}'+fe)
 
     # Update env vars
     sub={}

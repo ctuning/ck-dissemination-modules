@@ -458,8 +458,8 @@ def preprocess(i):
                      if js>0:
                         if tp=='path':
                            k1=ss.find('{')
-                           if k1>0 and ss.find('}',k1+1)>0:
-                              k2=ss.find('}',k1+1)
+                           if k1>0 and ss.rfind('}')>0:
+                              k2=ss.rfind('}')
                               s1=ss[:k1+1]
                               s2=ss[k2:]
                            else:
