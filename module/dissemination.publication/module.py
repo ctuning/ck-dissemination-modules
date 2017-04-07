@@ -16,6 +16,26 @@ import shutil
 import os
 import json
 
+# LaTex tokens
+tokens=[
+        {"key":'%CK={', "end":"}", "id":100, "html1":'',"html2":"", "remove":"yes"},
+        {"key":'%', "end":"\n", "id":1000, "html1":"","html2":"", "remove":"yes"},
+        {"key":'\n\n', "id":60, "html1":'\n<p>\n'},
+        {"key":"'\\&'", "id":105, "html1":"&"},
+        {"key":'\\section{', "end":"}", "id":0, "html1":"<h2>","html2":"</h2>\n"},
+        {"key":'\\subsection{', "end":"}", "id":1, "html1":"<h3>","html2":"</h3>\n"},
+        {"key":'\\emph{', "end":"}", "id":3, "html1":"<i>","html2":"</i>"},
+        {"key":'~', "end":"", "id":4, "html1":"&nbsp;","html2":""},
+        {"key":'\\label{', "end":"}", "id":10, "html1":'<a name="$#aname#$"></a>\n',"html2":"", "remove":"yes"},
+        {"key":'\\caption{', "end":"}", "id":20, "html1":'<br><i>',"html2":"</i><br><br>\n"},
+        {"key":'\\centering', "id":90, "html1":""},
+        {"key":'\\includegraphics', "end":"}", "id":30, "html1":'',"html2":"", "remove":"yes"},
+        {"key":'\\begin{figure*', "end":"]", "id":40, "html1":'\n<center>\n',"html2":"", "remove":"yes"},
+        {"key":'\\begin{figure', "end":"]", "id":41, "html1":'\n<center>\n',"html2":"", "remove":"yes"},
+        {"key":'\\end{figure}', "id":49, "html1":'</center>\n'},
+        {"key":'\\end{figure*}', "id":50, "html1":'</center>\n'}
+       ]
+
 # ============================================================================
 def init(i):
     return {'return':0}
@@ -504,5 +524,156 @@ def preprocess(i):
        r=ck.save_text_file({'text_file':doc, 'string':s})
        if r['return']>0: return r
        
+
+    return {'return':0}
+
+##############################################################################
+# convert tex article to live ck report
+
+def convert_to_live_ck_report(i):
+    """
+    Input:  {
+              module_uoa
+              data_uoa    - LaTex publication to process
+              (input)     - input file (paper.tex by default)
+              (input_bbl) - BBL input file for references (paper.bbl by default)
+              (output)    - output file in CK live report format
+            }
+
+    Output: {
+              return       - return code =  0, if successful
+                                         >  0, if error
+              (error)      - error text if return > 0
+            }
+
+    """
+
+    # Init
+    anchors={}
+    refs={}
+
+    muoa=i['module_uoa']
+    duoa=i['data_uoa']
+
+    fi=i.get('input','')
+    if fi=='': fi='paper.tex'
+
+    fib=i.get('input_bbl','')
+    if fib=='': fib='paper.bbl'
+
+    fo=i.get('output','')
+    if fo=='': fo='ck-interactive-paper.html'
+
+    # Check entry in current path (for URL)
+    r=ck.cid({})
+    if r['return']>0: return r
+
+    self_cid=r['module_uid']+':'+r['data_uid']
+    self_url='$#ck_root_url#$action=pull&common_func=yes&cid='+self_cid+'&filename='
+
+    # Get path to entry
+    r=ck.access({'action':'load',
+                 'module_uoa':muoa,
+                 'data_uoa':duoa})
+    if r['return']>0: return r
+
+    p=r['path']
+
+    pfi=os.path.join(p,fi)
+    pfib=os.path.join(p,fib)
+    
+    # Read paper
+    ck.out('Loading paper: '+pfi+' ...')
+    r=ck.load_text_file({'text_file':pfi})
+    if r['return']>0: return r
+    paper=r['string'].replace('\r','')
+
+    # Read references
+    ck.out('Loading references: '+pfib+' ...')
+    r=ck.load_text_file({'text_file':pfib})
+    if r['return']>0: return r
+    bbl=r['string']
+
+    hpaper=''
+
+    # Searching first section (ignore all above - will be prepared by CK via meta.json)
+    j=paper.find('\\section')
+    if j>=0:
+       # Searching for the bibliography
+       j1=paper.find('\\bibliographystyle')
+       if j1>=0:
+          hpaper=paper[j:j1-1]+'\n\n'
+
+          # Start processing special commands
+          for tt in tokens:
+              t=tt['key']
+              tend=tt.get('end','')
+              thtml1=tt.get('html1','')
+              thtml2=tt.get('html2','')
+              idx=tt['id']
+
+              if tend!='':
+                 j=hpaper.find(t)
+                 while j>=0:
+                    j1=hpaper.find(tend,j+len(t))
+                    if j1>=0:
+                       sx=hpaper[j+len(t):j1]
+
+                       xthtml1=thtml1
+                       if idx==10:
+                          sx=sx.replace(':','_').replace('-','_')
+                          xthtml1=thtml1.replace('$#aname#$',sx)
+                       elif idx==100:
+                          # Convert from JSON to dict
+                          r=ck.convert_json_str_to_dict({'str':'{'+sx+'}', 'skip_quote_replacement':'yes'})
+                          if r['return']>0: return r
+                          ii=r['dict']
+
+                          tp=ii.get('ck_url','')
+                          fx=ii.get('file','')
+                          px=ii.get('path','')
+
+                          ckimg=ii.get('ck_image','')
+                          ckimgw=ii.get('ck_image_width','')
+
+                          ckey='%CK_URL={'+fx+'}'
+
+                          if fx.endswith('.pdf'):
+                             fx=fx[:-4]+'.png'
+                             ii['file']=fx
+
+                          url=self_url+px+'/'+fx
+ 
+                          ck.out('')
+                          ck.out('* Processing CK command '+sx+' ...')
+
+                          r=ck.access(ii)
+                          if r['return']>0: return r
+
+                          x=''
+                          if ckimg=='yes':
+                             x='<br><br><img src="'+url+'" width="'+str(ckimgw)+'"><br>'
+
+                          hpaper1=hpaper.replace(ckey,x)
+                          if hpaper1!=hpaper:
+                             ck.out('  CHANGED!')
+                             hpaper=hpaper1
+
+                       if tt.get('remove','')=='yes': 
+                          sx=''
+
+                       hpaper=hpaper[:j]+xthtml1+sx+thtml2+hpaper[j1+len(tend):]
+                    else:
+                       return {'return':1, 'error':'inconsistent token "'+t+'" in tex file ('+hpaper[j:j+16]+' ...)'}
+
+                    j=hpaper.find(t, j)
+
+              else:
+                 hpaper=hpaper.replace(t, thtml1)
+
+    # Saving to report
+    ck.out('Saving interactive CK report: '+fo+' ...')
+    r=ck.save_text_file({'text_file':fo, 'string':hpaper})
+    if r['return']>0: return r
 
     return {'return':0}
