@@ -18,9 +18,12 @@ import json
 
 # LaTex tokens
 tokens=[
+        {"key":'%CK_TEX={', "end":"}", "id":250, "html1":'',"html2":"", "remove":"no"},
+        {"key":'%CK_ABSTRACT={', "end":"}", "id":250, "html1":'<i>',"html2":"</i>", "remove":"no"},
         {"key":'%CK={', "end":"}", "id":100, "html1":'',"html2":"", "remove":"yes"},
+        {"key":'%CK_HTML={', "end":"}", "id":150, "html1":'',"html2":"", "remove":"no"},
         {"key":'%', "end":"\n", "id":1000, "html1":"","html2":"", "remove":"yes"},
-        {"key":'\n\n', "id":60, "html1":'\n<p>\n'},
+        {"key":'\n\n', "id":60, "html1":'\n<p>'},
         {"key":'\\&', "id":105, "html1":"&"},
         {"key":'\\section{', "end":"}", "id":0, "html1":"<h2>","html2":"</h2>\n"},
         {"key":'\\subsection{', "end":"}", "id":1, "html1":"<h3>","html2":"</h3>\n"},
@@ -34,6 +37,10 @@ tokens=[
         {"key":'\\begin{figure', "end":"]", "id":41, "html1":'\n<center>\n',"html2":"", "remove":"yes"},
         {"key":'\\end{figure}', "id":49, "html1":'</center>\n'},
         {"key":'\\end{figure*}', "id":50, "html1":'</center>\n'},
+        {"key":'\\input{', "end":"}", "id":44, "html1":'',"html2":"", "remove":"yes"},
+        {"key":'{\\center', "end":"}", "id":44, "html1":'<center>\n',"html2":"</center>\n", "remove":"no"},
+        {"key":'\\end{table}', "id":49, "html1":'</center>\n'},
+        {"key":'\\begin{table}', "end":"]", "id":44, "html1":'<center>\n',"html2":"", "remove":"yes"},
         {"key":'\\cite{', "end":"}", "id":300, "html1":"[","html2":"]"},
        ]
 
@@ -640,7 +647,7 @@ def convert_to_live_ck_report(i):
 
     # Searching first section (ignore all above - will be prepared by CK via meta.json)
     nref=1
-    j=paper.find('\\section')
+    j=paper.find('%CK_INTERACTIVE_START')
     if j>=0:
        # Searching for the bibliography
        j1=paper.find('\\bibliographystyle')
@@ -666,6 +673,18 @@ def convert_to_live_ck_report(i):
                        if idx==10:
                           sx=sx.replace(':','_').replace('-','_')
                           xthtml1=thtml1.replace('$#aname#$',sx)
+
+                       elif idx==150:
+                          rx=ck.load_text_file({'text_file':sx})
+                          if rx['return']>0: return rx
+                          sx=rx['string']
+
+                       elif idx==250:
+                          psx=os.path.join(p,sx)
+                          rx=ck.load_text_file({'text_file':psx})
+                          if rx['return']>0: return rx
+                          sx=rx['string']
+
                        elif idx==300:
                           cites=sx.replace('\n','').strip().split(',')
                           xc=''
@@ -711,7 +730,8 @@ def convert_to_live_ck_report(i):
                              f0,f1=os.path.splitext(fx)
                              fx=f0.replace('.','-')+f1
 
-                          url=self_url+px+'/'+euid+fx
+                          fxx=px+'/'+euid+fx
+                          url=self_url+fxx
  
                           ck.out('')
                           ck.out('* Processing CK command '+sx+' ...')
