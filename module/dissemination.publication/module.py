@@ -583,13 +583,17 @@ def convert_to_live_ck_report(i):
     pfib=os.path.join(p,fib)
     
     # Read paper
+    ck.out('')
     ck.out('Loading paper: '+pfi+' ...')
+
     r=ck.load_text_file({'text_file':pfi})
     if r['return']>0: return r
     paper=r['string'].replace('\r','')
 
     # Read references
+    ck.out('')
     ck.out('Loading references: '+pfib+' ...')
+
     r=ck.load_text_file({'text_file':pfib})
     if r['return']>0: return r
     bbl=r['string']
@@ -633,6 +637,9 @@ def convert_to_live_ck_report(i):
                           fx=ii.get('file','')
                           px=ii.get('path','')
 
+                          euid=ii.get('extra_uid','')
+                          if euid!='': euid+='-'
+
                           ckimg=ii.get('ck_image','')
                           ckimgw=ii.get('ck_image_width','')
 
@@ -642,7 +649,11 @@ def convert_to_live_ck_report(i):
                              fx=fx[:-4]+'.png'
                              ii['file']=fx
 
-                          url=self_url+px+'/'+fx
+                          if euid!='':
+                             f0,f1=os.path.splitext(fx)
+                             fx=f0.replace('.','-')+f1
+
+                          url=self_url+px+'/'+euid+fx
  
                           ck.out('')
                           ck.out('* Processing CK command '+sx+' ...')
@@ -672,6 +683,7 @@ def convert_to_live_ck_report(i):
                  hpaper=hpaper.replace(t, thtml1)
 
     # Saving to report
+    ck.out('')
     ck.out('Saving interactive CK report: '+fo+' ...')
     r=ck.save_text_file({'text_file':fo, 'string':hpaper})
     if r['return']>0: return r

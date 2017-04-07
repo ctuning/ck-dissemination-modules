@@ -90,7 +90,10 @@ def prepare_for_latex(i):
 
     euid=i.get('extra_uid','')
     if euid!='':
-       f=euid+'.'+f
+       # also replace dots to avoid problems in LaTex
+       f0,f1=os.path.splitext(f)
+
+       f=euid+'-'+f0.replace('.','-')+f1
 
     ppn=os.path.join(ppn,f)
 
