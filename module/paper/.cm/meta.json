@@ -1,14 +1,7 @@
 {
-  "actions": {
-    "convert": {
-      "desc": "convert to various format"
-    },
-    "prepare_for_latex": {
-      "desc": "prepare slide for latex"
-    }
-  },
+  "actions": {},
   "copyright": "See CK COPYRIGHT.txt for copyright details",
-  "desc": "individual slides",
+  "desc": "CK wrapper for articles",
   "developer": "Grigori Fursin",
   "developer_email": "Grigori.Fursin@cTuning.org",
   "developer_webpage": "http://fursin.net",
