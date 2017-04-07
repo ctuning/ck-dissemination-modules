@@ -21,7 +21,7 @@ tokens=[
         {"key":'%CK={', "end":"}", "id":100, "html1":'',"html2":"", "remove":"yes"},
         {"key":'%', "end":"\n", "id":1000, "html1":"","html2":"", "remove":"yes"},
         {"key":'\n\n', "id":60, "html1":'\n<p>\n'},
-        {"key":"'\\&'", "id":105, "html1":"&"},
+        {"key":'\\&', "id":105, "html1":"&"},
         {"key":'\\section{', "end":"}", "id":0, "html1":"<h2>","html2":"</h2>\n"},
         {"key":'\\subsection{', "end":"}", "id":1, "html1":"<h3>","html2":"</h3>\n"},
         {"key":'\\emph{', "end":"}", "id":3, "html1":"<i>","html2":"</i>"},
@@ -33,7 +33,8 @@ tokens=[
         {"key":'\\begin{figure*', "end":"]", "id":40, "html1":'\n<center>\n',"html2":"", "remove":"yes"},
         {"key":'\\begin{figure', "end":"]", "id":41, "html1":'\n<center>\n',"html2":"", "remove":"yes"},
         {"key":'\\end{figure}', "id":49, "html1":'</center>\n'},
-        {"key":'\\end{figure*}', "id":50, "html1":'</center>\n'}
+        {"key":'\\end{figure*}', "id":50, "html1":'</center>\n'},
+        {"key":'\\cite{', "end":"}", "id":300, "html1":"[","html2":"]"},
        ]
 
 # ============================================================================
@@ -551,6 +552,7 @@ def convert_to_live_ck_report(i):
     # Init
     anchors={}
     refs={}
+    xrefs=[]
 
     muoa=i['module_uoa']
     duoa=i['data_uoa']
@@ -596,11 +598,48 @@ def convert_to_live_ck_report(i):
 
     r=ck.load_text_file({'text_file':pfib})
     if r['return']>0: return r
+    bbl=r['string'].replace('\r','')
+
+    # Parse references
+    ck.out('')
+    ck.out('Parsing references: '+pfib+' ...')
+
+    j=bbl.find('\\bibitem{')
+    while j>=0:
+       j1=bbl.find('}',j+1)
+       if j1>=0:
+          ref=bbl[j+9:j1]
+          j2=bbl.find('\n\n', j1+1)
+          if j2>0:
+             ck.out('  * '+ref)
+             s=bbl[j1+1:j2].strip()
+
+             # Processing special tokens
+             s=s.replace('~','&nbsp;').replace('\\newblock','<br>').replace('\\&','&')
+
+             # https://www.w3schools.com/charsets/ref_utf_latin_extended_a.asp
+             s=s.replace('\\c{T}','&Tcedil;').replace('\\u{a}','&abreve;').replace('\\c{s}','&scedil;')
+
+             j5=s.find('\\url{')
+             if j5>=0:
+                j6=s.find('}',j5+1)
+                if j6>=0:
+                   s=s[:j5]+'<a href="'+s[j5+4:j6]+'">Link</a>'+s[j6+1:]
+
+             s=s.replace('{\\em','').replace('{','').replace('}','')
+
+             refs[ref]={'html':s}
+
+       j=bbl.find('\\bibitem{',j+1)
+
+    r=ck.load_text_file({'text_file':pfib})
+    if r['return']>0: return r
     bbl=r['string']
 
     hpaper=''
 
     # Searching first section (ignore all above - will be prepared by CK via meta.json)
+    nref=1
     j=paper.find('\\section')
     if j>=0:
        # Searching for the bibliography
@@ -627,6 +666,25 @@ def convert_to_live_ck_report(i):
                        if idx==10:
                           sx=sx.replace(':','_').replace('-','_')
                           xthtml1=thtml1.replace('$#aname#$',sx)
+                       elif idx==300:
+                          cites=sx.replace('\n','').strip().split(',')
+                          xc=''
+                          for cx in cites:
+                              c=cx.strip()
+                              if c in refs:
+                                 x=refs[c]
+                                 n=x.get('number','')
+                                 if n=='':
+                                    n=nref
+                                    x['number']=n
+                                    xrefs.append(c)
+                                    nref+=1
+                                 if xc!='': xc+=', '
+                                 xc+='<a href="#ref_'+str(n)+'">'+str(n)+'</a>'
+                              else:
+                                 return {'return':1, 'error':'citation "'+c+'" was not found in bbl'}   
+                          sx=xc
+    
                        elif idx==100:
                           # Convert from JSON to dict
                           r=ck.convert_json_str_to_dict({'str':'{'+sx+'}', 'skip_quote_replacement':'yes'})
@@ -681,6 +739,31 @@ def convert_to_live_ck_report(i):
 
               else:
                  hpaper=hpaper.replace(t, thtml1)
+
+    # Check references
+    if len(xrefs)>0:
+       hpaper+='<br><br>\n'
+       hpaper+='<h2>References</h2>\n'
+
+       hpaper+='<table border="0" cellpadding="5" cellspacing="0">\n'
+
+       nref=0
+       for c in xrefs:
+           nref+=1
+
+           hpaper+=' <tr>\n'
+           hpaper+='  <td valign="top"><a name="ref_'+str(nref)+'"><b>['+str(nref)+']</b></td>'
+
+           hpaper+='  <td valign="top">'+refs[c]['html']
+
+           hpaper+='  <br></td>\n'
+
+           hpaper+=' </tr>\n'
+
+       hpaper+='</table>\n'
+
+       for q in range(0,50):
+           hpaper+='<br>'
 
     # Saving to report
     ck.out('')
