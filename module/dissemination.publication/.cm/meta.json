@@ -3,6 +3,9 @@
     "convert_to_live_ck_report": {
       "desc": "convert tex article to live ck report"
     },
+    "copy_file": {
+      "desc": "copy file from an entry to current directory"
+    },
     "generate": {
       "desc": "generate research paper title",
       "for_web": "yes"

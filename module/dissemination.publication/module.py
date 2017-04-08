@@ -22,6 +22,7 @@ tokens=[
         {"key":'%CK_ABSTRACT={', "end":"}", "id":250, "html1":'<i>',"html2":"</i>", "remove":"no"},
         {"key":'%CK={', "end":"}", "id":100, "html1":'',"html2":"", "remove":"yes"},
         {"key":'%CK_HTML={', "end":"}", "id":150, "html1":'',"html2":"", "remove":"no"},
+        {"key":'%CK_IMG={', "end":"}", "id":199, "html1":'',"html2":"", "remove":"no"},
         {"key":'\\%', "id":500, "html1":'&#37;'},
         {"key":'\n\n', "id":60, "html1":'\n<p>'},
         {"key":'\\&', "id":105, "html1":"&"},
@@ -31,7 +32,9 @@ tokens=[
         {"key":'\\subsection{', "end":"}", "id":81, "html1":"\n\n<h3>","html2":"</h3>\n"},
         {"key":'\\subsubsection{', "end":"}", "id":82, "html1":"\n\n<h4>","html2":"</h4>\n"},
         {"key":'\\emph{', "end":"}", "id":3, "html1":"<i>","html2":"</i>"},
+        {"key":'\\textbf{', "end":"}", "id":3, "html1":"<b>","html2":"</b>"},
         {"key":'{\\bf', "end":"}", "id":3, "html1":"<b>","html2":"</b>"},
+        {"key":'{\\it', "end":"}", "id":3, "html1":"<i>","html2":"</i>"},
         {"key":'~', "end":"", "id":4, "html1":"&nbsp;","html2":""},
         {"key":'\\item', "id":49, "html1":'\n<li>\n'},
         {"key":'\\begin{itemize}', "id":43, "html1":'\n<ul>\n'},
@@ -848,6 +851,9 @@ def convert_to_live_ck_report(i):
                           rx=ck.load_text_file({'text_file':sx})
                           if rx['return']>0: return rx
                           sx=rx['string']
+
+                       elif idx==199:
+                          sx='<img src="'+sx+'">'
 
                        elif idx==250:
                           psx=os.path.join(p,sx)
