@@ -22,26 +22,36 @@ tokens=[
         {"key":'%CK_ABSTRACT={', "end":"}", "id":250, "html1":'<i>',"html2":"</i>", "remove":"no"},
         {"key":'%CK={', "end":"}", "id":100, "html1":'',"html2":"", "remove":"yes"},
         {"key":'%CK_HTML={', "end":"}", "id":150, "html1":'',"html2":"", "remove":"no"},
-        {"key":'%', "end":"\n", "id":1000, "html1":"","html2":"", "remove":"yes"},
+        {"key":'\\%', "id":500, "html1":'&#37;'},
         {"key":'\n\n', "id":60, "html1":'\n<p>'},
         {"key":'\\&', "id":105, "html1":"&"},
-        {"key":'\\section{', "end":"}", "id":0, "html1":"<h2>","html2":"</h2>\n"},
-        {"key":'\\subsection{', "end":"}", "id":1, "html1":"<h3>","html2":"</h3>\n"},
+        {"key":'\\_', "id":105, "html1":"_"},
+        {"key":'\\label{', "end":"}", "id":10, "html1":'',"html2":"", "remove":"no"},
+        {"key":'\\section{', "end":"}", "id":80, "html1":"\n\n<h2>","html2":"</h2>\n"},
+        {"key":'\\subsection{', "end":"}", "id":81, "html1":"\n\n<h3>","html2":"</h3>\n"},
+        {"key":'\\subsubsection{', "end":"}", "id":82, "html1":"\n\n<h4>","html2":"</h4>\n"},
         {"key":'\\emph{', "end":"}", "id":3, "html1":"<i>","html2":"</i>"},
+        {"key":'{\\bf', "end":"}", "id":3, "html1":"<b>","html2":"</b>"},
         {"key":'~', "end":"", "id":4, "html1":"&nbsp;","html2":""},
-        {"key":'\\label{', "end":"}", "id":10, "html1":'<a name="$#aname#$"></a>\n',"html2":"", "remove":"yes"},
+        {"key":'\\item', "id":49, "html1":'\n<li>\n'},
+        {"key":'\\begin{itemize}', "id":43, "html1":'\n<ul>\n'},
+        {"key":'\\end{itemize}', "id":44, "html1":'</ul>\n'},
+        {"key":'\\begin{verbatim}', "id":43, "html1":'\n<pre>'},
+        {"key":'\\end{verbatim}', "id":44, "html1":'</pre>\n'},
         {"key":'\\caption{', "end":"}", "id":20, "html1":'<br><i>',"html2":"</i><br><br>\n"},
         {"key":'\\centering', "id":90, "html1":""},
         {"key":'\\includegraphics', "end":"}", "id":30, "html1":'',"html2":"", "remove":"yes"},
-        {"key":'\\begin{figure*', "end":"]", "id":40, "html1":'\n<center>\n',"html2":"", "remove":"yes"},
-        {"key":'\\begin{figure', "end":"]", "id":41, "html1":'\n<center>\n',"html2":"", "remove":"yes"},
+        {"key":'\\begin{table}', "end":"]", "id":555, "html1":'<center>\n',"html2":"", "remove":"no"},
+        {"key":'\\end{table}', "id":49, "html1":'</center>\n'},
+        {"key":'\\begin{figure', "end":"]", "id":554, "html1":'\n<center>\n',"html2":"", "remove":"no"},
         {"key":'\\end{figure}', "id":49, "html1":'</center>\n'},
         {"key":'\\end{figure*}', "id":50, "html1":'</center>\n'},
         {"key":'\\input{', "end":"}", "id":44, "html1":'',"html2":"", "remove":"yes"},
         {"key":'{\\center', "end":"}", "id":44, "html1":'<center>\n',"html2":"</center>\n", "remove":"no"},
-        {"key":'\\end{table}', "id":49, "html1":'</center>\n'},
-        {"key":'\\begin{table}', "end":"]", "id":44, "html1":'<center>\n',"html2":"", "remove":"yes"},
         {"key":'\\cite{', "end":"}", "id":300, "html1":"[","html2":"]"},
+        {"key":'\\ref{', "end":"}", "id":600, "html1":"","html2":""},
+        {"key":'{\\small', "end":"}", "id":3, "html1":"","html2":""},
+        {"key":'%', "end":"\n", "id":1000, "html1":"","html2":"", "remove":"yes"}
        ]
 
 # ============================================================================
@@ -219,6 +229,8 @@ def generate(i):
 ##############################################################################
 # viewing entry as html
 
+# TBD: should redirect to module:report ?
+
 def html_viewer(i):
     """
     Input:  {
@@ -377,8 +389,8 @@ def html_viewer(i):
              h+=' <div id="ck_entries_space8"></div>\n'
 
           h+='<div style="text-align: right;">'
-          if wurl!='':
-             h+='[&nbsp;<a href="'+wurl+'">Discussion wiki (comments, reproducibility, etc.)</a>&nbsp;]'
+#          if wurl!='' and dd.get('skip_wiki_discussion','')!='yes':
+#             h+='[&nbsp;<a href="'+wurl+'">Discussion wiki (comments, reproducibility, etc.)</a>&nbsp;]'
           h+='</div>\n'
 
           h+='<div id="ck_entries_space4"></div>\n'
@@ -559,7 +571,17 @@ def convert_to_live_ck_report(i):
     # Init
     anchors={}
     refs={}
-    xrefs=[]
+    cites={}
+    xcites=[]
+    figures={}
+    tables={}
+    sections={}
+    appendices={}
+
+    ifigures=0
+    itables=0
+    isections=0
+    iappendices='A'
 
     muoa=i['module_uoa']
     duoa=i['data_uoa']
@@ -635,7 +657,7 @@ def convert_to_live_ck_report(i):
 
              s=s.replace('{\\em','').replace('{','').replace('}','')
 
-             refs[ref]={'html':s}
+             cites[ref]={'html':s}
 
        j=bbl.find('\\bibitem{',j+1)
 
@@ -670,9 +692,157 @@ def convert_to_live_ck_report(i):
                        sx=hpaper[j+len(t):j1]
 
                        xthtml1=thtml1
-                       if idx==10:
+
+                       sx_right=''
+
+                       if idx==80:
+                          # Check if appendices
+                          l=hpaper.rfind('%CK_APPENDIX={', 0, j+1)
+                          if l>=0:
+                             l1=hpaper.find('}',l+1)
+                             app=hpaper[l+14:l1]
+                          else:
+                             isections+=1
+                             app=str(isections)
+
+                          sx=app+'&nbsp;&nbsp;'+sx
+                          sx_right='\n\n<!-- CK_CUR_SECTION={'+app+'} -->\n\n'
+
+                          l=hpaper.find('CK_LABEL={', j)
+                          if l>=0:
+                             l1=hpaper.find('}',l+1)
+                             lbl=hpaper[l+10:l1]
+
+                             sx_right='\n\n<a name="'+lbl+'">'+sx_right
+
+                             refs[lbl]=app
+
+                       elif idx==81:
+                          # Check current session
+                          l=hpaper.rfind('CK_CUR_SECTION={',0, j+1)
+                          if l>=0:
+                             l1=hpaper.find('}',l+1)
+                             section=hpaper[l+16:l1]
+
+                             subsection=''
+                             l2=hpaper.rfind('CK_CUR_SUBSECTION={',l,j+1)
+                             if l2>=0:
+                                l3=hpaper.find('}',l2)
+                                if l3>=0:
+                                   subsection=hpaper[l2+19:l3]
+
+                             if subsection=='':
+                                subsection='1'
+                             else:
+                                subsection=str(int(subsection)+1)   
+
+                             app=section+'.'+subsection
+
+                             sx=app+'&nbsp;&nbsp;'+sx
+                             sx_right='\n\n<!-- CK_CUR_SUBSECTION={'+subsection+'} -->\n\n'
+
+                             l=hpaper.find('CK_LABEL={', j)
+                             if l>=0:
+                                l1=hpaper.find('}',l+1)
+                                lbl=hpaper[l+10:l1]
+
+                                sx_right='\n\n<a name="'+lbl+'">'+sx_right
+
+                                refs[lbl]=app
+
+                       elif idx==82:
+                          # Check current session
+                          l=hpaper.rfind('CK_CUR_SECTION={',0, j+1)
+                          if l>=0:
+                             l1=hpaper.find('}',l+1)
+                             section=hpaper[l+16:l1]
+
+                             subsection=''
+                             l2=hpaper.rfind('CK_CUR_SUBSECTION={',l,j+1)
+                             if l2>=0:
+                                l3=hpaper.find('}',l2)
+                                if l3>=0:
+                                   subsection=hpaper[l2+19:l3]
+
+                                   subsubsection=''
+                                   l4=hpaper.rfind('CK_CUR_SUBSUBSECTION={',l2,j+1)
+                                   if l4>=0:
+                                      l5=hpaper.find('}',l4)
+                                      if l5>=0:
+                                         subsubsection=hpaper[l4+22:l5]
+
+                                   if subsubsection=='':
+                                      subsubsection='1'
+                                   else:
+                                      subsubsection=str(int(subsubsection)+1)   
+
+                                   app=section+'.'+subsection+'.'+subsubsection
+
+                                   sx=app+'&nbsp;&nbsp;'+sx
+                                   sx_right='\n\n<!-- CK_CUR_SUBSUBSECTION={'+subsubsection+'} -->\n\n'
+
+                                   l=hpaper.find('CK_LABEL={', j)
+                                   if l>=0:
+                                      l1=hpaper.find('}',l+1)
+                                      lbl=hpaper[l+10:l1]
+
+                                      sx_right='\n\n<a name="'+lbl+'">'+sx_right
+
+                                      refs[lbl]=app
+
+                       if idx==554:
+                          # Check if appendices
+                          ifigures+=1
+
+                          anc=''
+                          xlbl=''
+
+                          l=hpaper.find('CK_LABEL={', j)
+                          if l>=0:
+                             l1=hpaper.find('}',l+1)
+                             lbl=hpaper[l+10:l1]
+
+                             figures[lbl]={'id':ifigures}
+
+                             refs[lbl]=str(ifigures)
+
+                             xlbl='<a name="'+lbl+'">'
+ 
+                          sx='\n<br>'+xlbl+'<b>Figure '+str(ifigures)+'</b>\n'
+
+                       elif idx==555:
+                          # Check if appendices
+                          itables+=1
+
+                          anc=''
+                          xlbl=''
+
+                          l=hpaper.find('CK_LABEL={', j)
+                          if l>=0:
+                             l1=hpaper.find('}',l+1)
+                             lbl=hpaper[l+10:l1]
+
+                             tables[lbl]={'id':itables}
+
+                             refs[lbl]=str(itables)
+
+                             xlbl='<a name="'+lbl+'">'
+ 
+                          sx='\n<br>'+xlbl+'<b>Table '+str(itables)+'</b><br><br>\n'
+
+                       elif idx==10:
                           sx=sx.replace(':','_').replace('-','_')
-                          xthtml1=thtml1.replace('$#aname#$',sx)
+
+                          sx='<!-- CK_LABEL={'+sx+'} -->\n\n'
+
+#                          xthtml1=thtml1.replace('$#aname#$',sx)
+
+                       elif idx==600:
+                          sx=sx.replace(':','_').replace('-','_')
+
+                          sx='<a href="#'+sx+'">'+str(refs[sx])+'</a>'
+
+#                          xthtml1=thtml1.replace('$#aname#$',sx)
 
                        elif idx==150:
                           rx=ck.load_text_file({'text_file':sx})
@@ -686,17 +856,17 @@ def convert_to_live_ck_report(i):
                           sx=rx['string']
 
                        elif idx==300:
-                          cites=sx.replace('\n','').strip().split(',')
+                          ycites=sx.replace('\n','').strip().split(',')
                           xc=''
-                          for cx in cites:
+                          for cx in ycites:
                               c=cx.strip()
-                              if c in refs:
-                                 x=refs[c]
+                              if c in cites:
+                                 x=cites[c]
                                  n=x.get('number','')
                                  if n=='':
                                     n=nref
                                     x['number']=n
-                                    xrefs.append(c)
+                                    xcites.append(c)
                                     nref+=1
                                  if xc!='': xc+=', '
                                  xc+='<a href="#ref_'+str(n)+'">'+str(n)+'</a>'
@@ -752,6 +922,13 @@ def convert_to_live_ck_report(i):
                           sx=''
 
                        hpaper=hpaper[:j]+xthtml1+sx+thtml2+hpaper[j1+len(tend):]
+
+                       # Add extra to the right of the line (CK remarks)
+                       if sx_right!='':
+                          k=hpaper.find('\n',j+1)
+                          if k>=0:
+                             hpaper=hpaper[:k]+sx_right+hpaper[k+1:]
+
                     else:
                        return {'return':1, 'error':'inconsistent token "'+t+'" in tex file ('+hpaper[j:j+16]+' ...)'}
 
@@ -761,20 +938,20 @@ def convert_to_live_ck_report(i):
                  hpaper=hpaper.replace(t, thtml1)
 
     # Check references
-    if len(xrefs)>0:
+    if len(xcites)>0:
        hpaper+='<br><br>\n'
        hpaper+='<h2>References</h2>\n'
 
        hpaper+='<table border="0" cellpadding="5" cellspacing="0">\n'
 
        nref=0
-       for c in xrefs:
+       for c in xcites:
            nref+=1
 
            hpaper+=' <tr>\n'
            hpaper+='  <td valign="top"><a name="ref_'+str(nref)+'"><b>['+str(nref)+']</b></td>'
 
-           hpaper+='  <td valign="top">'+refs[c]['html']
+           hpaper+='  <td valign="top">'+cites[c]['html']
 
            hpaper+='  <br></td>\n'
 
