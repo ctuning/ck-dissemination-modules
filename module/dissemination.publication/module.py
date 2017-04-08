@@ -22,7 +22,9 @@ tokens=[
         {"key":'%CK_ABSTRACT={', "end":"}", "id":250, "html1":'<i>',"html2":"</i>", "remove":"no"},
         {"key":'%CK={', "end":"}", "id":100, "html1":'',"html2":"", "remove":"yes"},
         {"key":'%CK_HTML={', "end":"}", "id":150, "html1":'',"html2":"", "remove":"no"},
+        {"key":'%CK_URL={', "end":"}", "id":198, "html1":'',"html2":"", "remove":"no"},
         {"key":'%CK_IMG={', "end":"}", "id":199, "html1":'',"html2":"", "remove":"no"},
+        {"key":'%CK_INTERACTIVE_GRAPH={', "end":"}", "id":299, "html1":'',"html2":"", "remove":"no"},
         {"key":'\\%', "id":500, "html1":'&#37;'},
         {"key":'\n\n', "id":60, "html1":'\n<p>'},
         {"key":'\\&', "id":105, "html1":"&"},
@@ -44,11 +46,11 @@ tokens=[
         {"key":'\\caption{', "end":"}", "id":20, "html1":'<br><i>',"html2":"</i><br><br>\n"},
         {"key":'\\centering', "id":90, "html1":""},
         {"key":'\\includegraphics', "end":"}", "id":30, "html1":'',"html2":"", "remove":"yes"},
-        {"key":'\\begin{table}', "end":"]", "id":555, "html1":'<center>\n',"html2":"", "remove":"no"},
-        {"key":'\\end{table}', "id":49, "html1":'</center>\n'},
-        {"key":'\\begin{figure', "end":"]", "id":554, "html1":'\n<center>\n',"html2":"", "remove":"no"},
-        {"key":'\\end{figure}', "id":49, "html1":'</center>\n'},
-        {"key":'\\end{figure*}', "id":50, "html1":'</center>\n'},
+        {"key":'\\begin{table}', "end":"]", "id":555, "html1":'<center><div style="background-color:#f0f1f2;">\n',"html2":"", "remove":"no"},
+        {"key":'\\end{table}', "id":49, "html1":'</div></center>\n'},
+        {"key":'\\begin{figure', "end":"]", "id":554, "html1":'\n<center><div style="background-color:#f0f1f2;">\n',"html2":"", "remove":"no"},
+        {"key":'\\end{figure}', "id":49, "html1":'</div></center>\n'},
+        {"key":'\\end{figure*}', "id":50, "html1":'</div></center>\n'},
         {"key":'\\input{', "end":"}", "id":44, "html1":'',"html2":"", "remove":"yes"},
         {"key":'{\\center', "end":"}", "id":44, "html1":'<center>\n',"html2":"</center>\n", "remove":"no"},
         {"key":'\\cite{', "end":"}", "id":300, "html1":"[","html2":"]"},
@@ -852,8 +854,21 @@ def convert_to_live_ck_report(i):
                           if rx['return']>0: return rx
                           sx=rx['string']
 
+                       elif idx==198:
+                          r=ck.convert_json_str_to_dict({'str':'{'+sx+'}', 'skip_quote_replacement':'yes'})
+                          if r['return']>0: return r
+                          ii=r['dict']
+
+                          url=ii['url']
+                          text=ii['text']
+
+                          sx='<a href="'+url+'">'+text+'</a><br>'
+
                        elif idx==199:
                           sx='<img src="'+sx+'">'
+
+                       elif idx==299:
+                          sx='\n$#ck_access_start#$\n{'+sx+'}\n$#ck_access_stop#$\n'
 
                        elif idx==250:
                           psx=os.path.join(p,sx)
