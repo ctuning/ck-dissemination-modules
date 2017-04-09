@@ -35,6 +35,7 @@ tokens=[
         {"key":'\\subsubsection{', "end":"}", "id":82, "html1":"\n\n<h4>","html2":"</h4>\n"},
         {"key":'\\emph{', "end":"}", "id":3, "html1":"<i>","html2":"</i>"},
         {"key":'\\textbf{', "end":"}", "id":3, "html1":"<b>","html2":"</b>"},
+        {"key":'\\url{', "end":"}", "id":333, "html1":"","html2":""},
         {"key":'{\\bf', "end":"}", "id":3, "html1":"<b>","html2":"</b>"},
         {"key":'{\\it', "end":"}", "id":3, "html1":"<i>","html2":"</i>"},
         {"key":'~', "end":"", "id":4, "html1":"&nbsp;","html2":""},
@@ -853,6 +854,9 @@ def convert_to_live_ck_report(i):
                           rx=ck.load_text_file({'text_file':sx})
                           if rx['return']>0: return rx
                           sx=rx['string']
+
+                       elif idx==333:
+                          sx='<a href="'+sx+'">'+sx+'</a>'
 
                        elif idx==198:
                           r=ck.convert_json_str_to_dict({'str':'{'+sx+'}', 'skip_quote_replacement':'yes'})
