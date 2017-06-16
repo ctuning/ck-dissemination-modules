@@ -869,7 +869,14 @@ def convert_to_live_ck_report(i):
                           sx='<a href="'+url+'">'+text+'</a><br>'
 
                        elif idx==199:
-                          sx='<img src="'+sx+'">'
+                          b9=sx.find(';')
+                          if b9<0:
+                             sx='<img src="'+sx+'">'
+                          else:
+                             sy=sx[b9+1:].strip()
+                             sx=sx[:b9].strip()
+
+                             sx='<a href="'+sy+'"><img src="'+sx+'"></a>'
 
                        elif idx==299:
                           sx='\n$#ck_access_start#$\n{'+sx+'}\n$#ck_access_stop#$\n'
