@@ -57,6 +57,7 @@ tokens=[
         {"key":'\\cite{', "end":"}", "id":300, "html1":"[","html2":"]"},
         {"key":'\\ref{', "end":"}", "id":600, "html1":"","html2":""},
         {"key":'{\\small', "end":"}", "id":3, "html1":"","html2":""},
+        {"key":'\\vspace{', "end":"}", "id":950, "html1":"<br>","html2":"","remove":"yes"},
         {"key":'%', "end":"\n", "id":1000, "html1":"","html2":"", "remove":"yes"}
        ]
 
