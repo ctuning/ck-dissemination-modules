@@ -24,6 +24,7 @@ tokens=[
         {"key":'%CK_HTML={', "end":"}", "id":150, "html1":'',"html2":"", "remove":"no"},
         {"key":'%CK_URL={', "end":"}", "id":198, "html1":'',"html2":"", "remove":"no"},
         {"key":'%CK_IMG={', "end":"}", "id":199, "html1":'',"html2":"", "remove":"no"},
+        {"key":'%CK_INTERACTIVE_GRAPH_PASSIVE={', "end":"}", "id":298, "html1":'',"html2":"", "remove":"no"},
         {"key":'%CK_INTERACTIVE_GRAPH={', "end":"}", "id":299, "html1":'',"html2":"", "remove":"no"},
         {"key":'\\%', "id":500, "html1":'&#37;'},
         {"key":'\n\n', "id":60, "html1":'\n<p>'},
@@ -879,7 +880,10 @@ def convert_to_live_ck_report(i):
 
                              sx='<a href="'+sy+'"><img src="'+sx+'"></a>'
 
-                       elif idx==299:
+                       elif idx==298: # Passive graph (include)
+                          sx='\n$#ck_include_start#$\n{'+sx+'}\n$#ck_include_stop#$\n'
+
+                       elif idx==299: # Active graph (generate)
                           sx='\n$#ck_access_start#$\n{'+sx+'}\n$#ck_access_stop#$\n'
 
                        elif idx==250:
