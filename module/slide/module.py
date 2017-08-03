@@ -153,11 +153,22 @@ def convert(i):
     p=r['path']
 
     pd=i.get('density','')
-    if pd=='': pd='300'
+    if pd=='': 
+       pd=d.get('density','')
+       if pd=='':
+          pd='300'
+
     pq=i.get('quality','')
-    if pq=='': pq='100'
+    if pq=='': 
+       pq=d.get('quality','')
+       if pq=='': 
+          pq='100'
+
     ps=i.get('scale','')
-    if ps=='': ps='800'
+    if ps=='':
+       ps=d.get('scale','')
+       if ps=='':
+          ps='800'
 
     slides=d.get('slides',[])
 
@@ -194,7 +205,7 @@ def convert(i):
            return {'return':1, 'error':'cropped file was not created'}
 
         # Convert to cropped png
-        s='convert -density '+pd+' -quality '+pq+' -scale '+ps+' '+ppc+' '+ppcpng
+        s='convert -density '+str(pd)+' -quality '+str(pq)+' -scale '+str(ps)+' '+ppc+' '+ppcpng
         ck.out('')
         ck.out(s)
         os.system(s)
