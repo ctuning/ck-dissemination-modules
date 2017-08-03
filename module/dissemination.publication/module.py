@@ -45,6 +45,8 @@ tokens=[
         {"key":'\\end{itemize}', "id":44, "html1":'</ul>\n'},
         {"key":'\\begin{verbatim}', "id":43, "html1":'\n<pre>'},
         {"key":'\\end{verbatim}', "id":44, "html1":'</pre>\n'},
+        {"key":'\\begin{lstlisting', "end":"]", "id":43, "html1":'\n<pre>', "remove":"yes"},
+        {"key":'\\end{lstlisting}', "id":44, "html1":'</pre>\n'},
         {"key":'\\caption{', "end":"}", "id":20, "html1":'<br><i>',"html2":"</i><br><br>\n"},
         {"key":'\\centering', "id":90, "html1":""},
         {"key":'\\includegraphics', "end":"}", "id":30, "html1":'',"html2":"", "remove":"yes"},
