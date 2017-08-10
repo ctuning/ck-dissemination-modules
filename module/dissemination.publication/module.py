@@ -41,6 +41,7 @@ tokens=[
         {"key":'\\textit{', "end":"}", "id":3, "html1":"<i>","html2":"</i>"},
         {"key":'\\texttt{', "end":"}", "id":3, "html1":"<pre>","html2":"</pre>"},
         {"key":'\\url{', "end":"}", "id":333, "html1":"","html2":""},
+        {"key":'\\href{', "end":"}", "id":334, "html1":"","html2":""},
         {"key":'{\\bf', "end":"}", "id":3, "html1":"<b>","html2":"</b>"},
         {"key":'{\\it', "end":"}", "id":3, "html1":"<i>","html2":"</i>"},
         {"key":'~', "end":"", "id":4, "html1":"&nbsp;","html2":""},
@@ -869,6 +870,15 @@ def convert_to_live_ck_report(i):
 
                        elif idx==333:
                           sx='<a href="'+sx+'">'+sx+'</a>'
+
+                       elif idx==334:
+                          sx1=sx
+                          if len(hpaper)>j1 and hpaper[j1+1:j1+2]=='{':
+                             j2=hpaper.find('}',j1+2)
+                             sx1=hpaper[j1+2:j2]
+                             j1=j2
+
+                          sx='<a href="'+sx+'">'+sx1+'</a>'
 
                        elif idx==198:
                           r=ck.convert_json_str_to_dict({'str':'{'+sx+'}', 'skip_quote_replacement':'yes'})
