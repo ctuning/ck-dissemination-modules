@@ -29,6 +29,7 @@ tokens=[
         {"key":'\\%', "id":500, "html1":'&#37;'},
         {"key":'\n\n', "id":60, "html1":'\n<p>'},
         {"key":'\\&', "id":105, "html1":"&"},
+        {"key":'\\clearpage', "id":105, "html1":"<p>"},
         {"key":'\\_', "id":105, "html1":"_"},
         {"key":'\\$', "id":105, "html1":'$'},
         {"key":'\\newline', "id":105, "html1":'\n'},
