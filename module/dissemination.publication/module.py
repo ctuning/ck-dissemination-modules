@@ -675,6 +675,16 @@ def convert_to_live_ck_report(i):
                 if j6>=0:
                    s=s[:j5]+'<a href="'+s[j5+4:j6]+'">Link</a>'+s[j6+1:]
 
+             j5=s.find('\\href{')
+             if j5>=0:
+                j6=s.find('}',j5+1)
+                if j6>=0:
+                   j7=s.find('{',j6+1)
+                   if j7>=0:
+                      j8=s.find('}',j7+1)
+                      if j8>=0:
+                         s=s[:j5]+'<a href="'+s[j5+5:j6]+'">'+s[j7+1:j8]+'</a>'+s[j8+1:]
+
              s=s.replace('{\\em','').replace('{','').replace('}','')
 
              cites[ref]={'html':s}
