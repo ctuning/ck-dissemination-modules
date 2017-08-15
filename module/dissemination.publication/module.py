@@ -48,6 +48,7 @@ tokens=[
         {"key":'\\href{', "end":"}", "id":334, "html1":"","html2":""},
         {"key":'{\\bf', "end":"}", "id":3, "html1":"<b>","html2":"</b>"},
         {"key":'{\\it', "end":"}", "id":3, "html1":"<i>","html2":"</i>"},
+        {"key":'{\\tt', "end":"}", "id":3, "html1":"<code>","html2":"</code>"},
         {"key":'~', "end":"", "id":4, "html1":"&nbsp;","html2":""},
         {"key":'\\item', "id":49, "html1":'\n<li>\n'},
         {"key":'\\begin{itemize}', "id":43, "html1":'\n<ul>\n'},
