@@ -215,3 +215,58 @@ def convert(i):
            return {'return':1, 'error':'PNG file was not created'}
 
     return {'return':0}
+
+##############################################################################
+# copy file to slide
+
+def copy_file(i):
+    """
+    Input:  {
+              (repo_uoa) - repo with slide where to copy a file
+              data_uoa   - entry with slide where to copy a file
+
+              file       - file to copy to entry
+              (new_name) - use new file name (useful to use UID)
+            }
+
+    Output: {
+              return       - return code =  0, if successful
+                                         >  0, if error
+              (error)      - error text if return > 0
+            }
+
+    """
+
+    import os
+    import shutil
+
+    o=i.get('out','')
+
+    f=i['file']
+
+    if not os.path.isfile(f):
+       return {'return':1, 'error':'file "'+f+'" not found'}
+
+    ruoa=i.get('repo_uoa','')
+    duoa=i['data_uoa']
+
+    # Find entry
+    r=ck.access({'action':'find',
+                 'module_uoa':work['self_module_uid'],
+                 'data_uoa':duoa,
+                 'repo_uoa':ruoa})
+    if r['return']>0: return r
+    p=r['path']
+
+    nn=i.get('new_name','')
+    if nn=='': nn=f
+
+    pp=os.path.join(p,nn)
+
+    # Copy file
+    shutil.copyfile(f,pp)
+
+    if o=='con':
+       ck.out('File successfully copied ('+pp+')')
+
+    return {'return':0}

@@ -3,6 +3,9 @@
     "convert": {
       "desc": "convert to various format"
     },
+    "copy_file": {
+      "desc": "copy file to slide"
+    },
     "prepare_for_latex": {
       "desc": "prepare slide for latex"
     }
