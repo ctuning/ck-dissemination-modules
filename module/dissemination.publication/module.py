@@ -427,6 +427,7 @@ def html_viewer(i):
              h+='<span id="ck_article_text">\n'
 
              px=os.path.join(pp,t)
+             th=''
              if os.path.isfile(px):
                 rx=ck.load_text_file({'text_file':px})
                 if rx['return']>0: return rx
