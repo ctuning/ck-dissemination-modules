@@ -658,11 +658,25 @@ def convert_to_live_ck_report(i):
     ck.out('')
     ck.out('Parsing references: '+pfib+' ...')
 
-    j=bbl.find('\\bibitem{')
+    j=bbl.find('\\bibitem')
     while j>=0:
+       # Check if []% and then remove it
+       index=9
+
+       x=bbl[j+8:j+9]
+       if x=='[':
+          j1=bbl.find(']%', j+9)
+          if j1<0:
+             return {'return':1, 'error':'unknown bibitem format - expected ]% after \\bibitem['}
+          j=bbl.find('{',j1)
+          index=1
+
+       elif x!='{':
+          return {'return':1, 'error':'unknown bibitem format - expected \\bititem{ or \\bibitem['}
+
        j1=bbl.find('}',j+1)
        if j1>=0:
-          ref=bbl[j+9:j1]
+          ref=bbl[j+index:j1]
           j2=bbl.find('\n\n', j1+1)
           if j2>0:
              ck.out('  * '+ref)
@@ -694,7 +708,7 @@ def convert_to_live_ck_report(i):
 
              cites[ref]={'html':s}
 
-       j=bbl.find('\\bibitem{',j+1)
+       j=bbl.find('\\bibitem',j+1)
 
     r=ck.load_text_file({'text_file':pfib})
     if r['return']>0: return r
