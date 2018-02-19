@@ -29,6 +29,7 @@ tokens=[
         {"key":'\\%', "id":500, "html1":'&#37;'},
         {"key":'\n\n', "id":60, "html1":'\n<p>'},
         {"key":'\\&', "id":105, "html1":"&"},
+        {"key":'\\ ', "id":105, "html1":" "},
         {"key":'\\{', "id":105, "html1":"{"},
         {"key":'\\}', "id":105, "html1":"}"},
         {"key":'\\clearpage', "id":105, "html1":"<p>"},
@@ -75,7 +76,8 @@ tokens=[
         {"key":'\\ref{', "end":"}", "id":600, "html1":"","html2":""},
         {"key":'{\\small', "end":"}", "id":3, "html1":"","html2":""},
         {"key":'\\vspace{', "end":"}", "id":950, "html1":"<br>","html2":"","remove":"yes"},
-        {"key":'%', "end":"\n", "id":1000, "html1":"","html2":"", "remove":"yes"}
+        {"key":'%', "end":"\n", "id":1000, "html1":"","html2":"", "remove":"yes"},
+        {"key":'\\footnote{', "end":"}", "id":1111, "html1":"","html2":"", "remove":"yes"},
        ]
 
 # ============================================================================
@@ -683,7 +685,7 @@ def convert_to_live_ck_report(i):
              s=bbl[j1+1:j2].strip()
 
              # Processing special tokens
-             s=s.replace('~','&nbsp;').replace('\\newblock','<br>').replace('\\&','&')
+             s=s.replace('~','&nbsp;').replace('\\newblock','<br>').replace('\\&','&').replace('\\ ',' ')
 
              # https://www.w3schools.com/charsets/ref_utf_latin_extended_a.asp
              s=s.replace('\\c{T}','&Tcedil;').replace('\\u{a}','&abreve;').replace('\\c{s}','&scedil;')
@@ -921,14 +923,27 @@ def convert_to_live_ck_report(i):
                           sx='<a href="'+url+'">'+text+'</a><br>'
 
                        elif idx==199:
-                          b9=sx.find(';')
-                          if b9<0:
-                             sx='<img src="'+sx+'">'
+#                          b9=sx.find(';')
+#                          if b9<0:
+#                             sx='<img src="'+sx+'">'
+#                          else:
+#                             sy=sx[b9+1:].strip()
+#                             sx=sx[:b9].strip()
+#
+#                             sx='<a href="'+sy+'"><img src="'+sx+'"></a>'
+                          
+                          sxs=sx.split(';')
+                          if len(sxs)<1:
+                             sx='<img src="'+sxs+'">'
                           else:
-                             sy=sx[b9+1:].strip()
-                             sx=sx[:b9].strip()
+                             s0=sxs[0].strip()
+                             s1=sxs[1].strip()
+                             s2=''
 
-                             sx='<a href="'+sy+'"><img src="'+sx+'"></a>'
+                             if len(sxs)>2:
+                                s2=sxs[2].strip()
+
+                             sx='<a href="'+s1+'"><img src="'+s0+'" '+s2+'></a>'
 
                        elif idx==298: # Passive graph (include)
                           sx='\n$#ck_include_start#$\n{'+sx+'}\n$#ck_include_stop#$\n'
