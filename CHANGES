@@ -1,3 +1,8 @@
+* 2018.06.02 * added module proceedings.acm with action "generate" 
+               to automate generation of proceedings 
+               (such as ReQuEST, http://cKnowledge.org/request) 
+               with papers and artifacts in the CK format
+
 * 2017.07.30 * added support for \begin{table*} in interactive report
 
 * 2017.07.26 * improvements in interactive D3 graphs (multiple in the same report)
