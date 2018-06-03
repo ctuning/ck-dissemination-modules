@@ -159,3 +159,34 @@ def html_viewer(i):
 
 
     return {'return':0, 'raw':raw, 'show_top':top, 'html':h}
+
+##############################################################################
+# extended add
+
+def add(i):
+    """
+    Input:  {
+              (template) - if !='', use this program as template!
+            }
+
+    Output: {
+              return       - return code =  0, if successful
+                                         >  0, if error
+              (error)      - error text if return > 0
+            }
+
+    """
+
+    o=i.get('out','')
+
+    duoa=i.get('data_uoa','')
+
+    d=i.get('dict',{})
+    d['name']=duoa
+
+    i['dict']=d
+
+    i['common_func']='yes'
+    i['sort_keys']='yes'
+
+    return ck.access(i)
