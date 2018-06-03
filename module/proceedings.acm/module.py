@@ -120,7 +120,7 @@ def generate(i):
     h+='</i> !-->\n'
     h+='\n'
 
-    h+='<table border="1" style="border-width: 1px;border-spacing:0px; ">\n'
+    h+='<table border="1" style="border-width: 1px;border-spacing:0px;" cellpadding="5">\n'
 
     h+=' <tr>\n'
     h+='  <td valign="top"><b>Paper</b></td>\n'
@@ -136,6 +136,9 @@ def generate(i):
 
         da=a['dict']
         dp=a['paper_dict']
+
+        paper_doi=da.get('paper_doi','')
+        artifact_doi=da.get('artifact_doi','')
 
         title=dp.get('title','')
 
@@ -167,7 +170,11 @@ def generate(i):
 
         h+=' <tr>\n'
 
-        x='<b>'+title+'</b><br><i>'+xauthors+'</i>'
+        x='<b>'+title+'</b><br><i>'+xauthors+'</i><p>\n'
+        if paper_doi!='':
+           x+=' [ <a href="'+paper_doi+'">Paper DOI</a> ]'
+        if artifact_doi!='':
+           x+=' [ <a href="'+artifact_doi+'">Artifact DOI</a> ]\n'
         h+='  <td valign="top">\n'
         h+='   '+x+'\n'
         h+='  </td>\n'
@@ -175,33 +182,33 @@ def generate(i):
         x=''
         if b_available:
            x='<img src="https://www.acm.org/binaries/content/gallery/acm/publications/replication-badges/artifacts_available_dl.jpg" width="64"><br>'
-        h+='  <td valign="top">'+x+'</td>\n'
+        h+='  <td valign="top" align="center">'+x+'</td>\n'
 
         x=''
         if b_functional and not b_reusable:
            x='<img src="https://www.acm.org/binaries/content/gallery/acm/publications/replication-badges/artifacts_evaluated_functional_dl.jpg" width="64"><br>'
-        h+='  <td valign="top">\n'
+        h+='  <td valign="top" align="center">\n'
         h+='   '+x+'\n'
         h+='  </td>\n'
 
         x=''
         if b_reusable:
            x='<img src="https://www.acm.org/binaries/content/gallery/acm/publications/replication-badges/artifacts_evaluated_reusable_dl.jpg" width="64"><br>'
-        h+='  <td valign="top">\n'
+        h+='  <td valign="top" align="center">\n'
         h+='   '+x+'\n'
         h+='  </td>\n'
 
         x=''
         if b_reproduced:
            x='<img src="https://www.acm.org/binaries/content/gallery/acm/publications/replication-badges/results_reproduced_dl.jpg" width="64"><br>'
-        h+='  <td valign="top">\n'
+        h+='  <td valign="top" align="center">\n'
         h+='   '+x+'\n'
         h+='  </td>\n'
 
         x=''
         if b_replicated:
            x='<img src="https://www.acm.org/binaries/content/gallery/acm/publications/replication-badges/results_replicated_dl.jpg" width="64"><br>'
-        h+='  <td valign="top">\n'
+        h+='  <td valign="top" align="center">\n'
         h+='   '+x+'\n'
         h+='  </td>\n'
 
