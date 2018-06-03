@@ -1,3 +1,5 @@
+* 2018.06.03 * added "ck clean dissemination.publication" and "ck compile dissemination.publication"
+
 * 2018.06.02 * added module proceedings.acm with action "generate" 
                to automate generation of proceedings 
                (such as ReQuEST, http://cKnowledge.org/request) 

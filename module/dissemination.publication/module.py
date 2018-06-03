@@ -1071,3 +1071,85 @@ def convert_to_live_ck_report(i):
     if r['return']>0: return r
 
     return {'return':0}
+
+##############################################################################
+# compile paper
+
+def compile(i):
+    """
+    Input:  {
+              data_uoa - paper UOA
+            }
+
+    Output: {
+              return       - return code =  0, if successful
+                                         >  0, if error
+              (error)      - error text if return > 0
+            }
+
+    """
+
+    i['script']='compile'
+
+    return run_script(i)
+
+##############################################################################
+# clean paper
+
+def clean(i):
+    """
+    Input:  {
+              data_uoa - paper UOA
+            }
+
+    Output: {
+              return       - return code =  0, if successful
+                                         >  0, if error
+              (error)      - error text if return > 0
+            }
+
+    """
+
+    i['script']='clean'
+
+    return run_script(i)
+
+##############################################################################
+# internal: run script
+
+def run_script(i):
+    
+    import os
+    import platform
+
+    duoa=i.get('data_uoa','')
+    if duoa=='':
+       return {'return':1, 'error':'paper name is not defined (see ck ls '+work['self_module_uoa']+')'}
+
+    # Load entry
+    r=ck.access({'action':'load',
+                 'module_uoa':work['self_module_uid'],
+                 'data_uoa':duoa})
+    if r['return']>0: return r
+
+    p=r['path']
+    d=r['dict']
+
+    # Prepare script name
+    s=i['script']
+
+    sname=d.get('scripts',{}).get(s,'')
+    if sname!='':
+       s=sname
+
+    script='_'+s
+    
+    if platform.system().lower().startswith('win'):
+       script+='.bat'
+    else:
+       script+='.sh'
+
+    # Run script
+    os.system(script)
+
+    return {'return':0}

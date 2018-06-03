@@ -307,7 +307,6 @@ def generate(i):
        hsummary+='<ul>\n'
        for q in source_materials:
            hsummary+=' <li>'+q+'\n'
-           hsummary+='  [ <a href="'+host_conference_url+'">ACM DL</a> ]\n'
        hsummary+='</ul>\n'
 
     hsummary+='<p>\n'
