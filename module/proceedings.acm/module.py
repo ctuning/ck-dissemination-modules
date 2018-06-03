@@ -36,7 +36,8 @@ def init(i):
 def generate(i):
     """
     Input:  {
-              data_uoa - proceedings entry
+              data_uoa                - proceedings entry
+              (skip_paper_generation) - if 'yes', do not generate papers
             }
 
     Output: {
@@ -48,8 +49,13 @@ def generate(i):
     """
 
     import os
+    import shutil
+
+    curdir=os.getcwd()
 
     o=i.get('out','')
+    oo=''
+    if o=='con': oo=o
 
     # Check entry name
     duoa=i.get('data_uoa','')
@@ -65,6 +71,8 @@ def generate(i):
     d=r['dict']
     p=r['path']
 
+    spg=i.get('skip_paper_generation','')
+
     # Check abstract
     fa=os.path.join(p,'abstract.html')
     abstract=''
@@ -76,6 +84,7 @@ def generate(i):
     # Get various meta
     url=d['url']
     short_name=d['short_name']
+    doi=d.get('doi','')
     
     # Get list of artifacts (papers, etc)
     artifacts=d.get('ck_artifacts',[])
@@ -100,6 +109,9 @@ def generate(i):
         a['dict']=r['dict']
         a['path']=r['path']
 
+        a['repo_uoa']=r['repo_uoa']
+        a['repo_uid']=r['repo_uid']
+
         # Load paper
         ii={'action':'load',
             'module_uoa':cfg['module_deps']['dissemination.publication'],
@@ -112,7 +124,10 @@ def generate(i):
         a['paper_path']=r['path']
 
     # Generate table of evaluated artifacts for http://cTuning.org/ae/artifacts.html
-    f='ctuning-ae-artifacts-'+duoa+'.html'
+    ck.out('')
+    ck.out('Generating paper and artifact table ...')
+
+    f=duoa+'--ctuning-ae-artifacts.html'
 
     anchor=short_name.lower().replace("'","")
 
@@ -244,7 +259,22 @@ def generate(i):
     if r['return']>0: return r
 
     # Generating summary for ACM DL
-    fs='acm-proceedings-summary-'+duoa+'.html'
+    ck.out('')
+    ck.out('Generating proceedings summary for ACM DL ...')
+
+    if doi.startswith('https://doi.org/'):
+       doi=doi[16:]
+    doi=doi.replace('/','-')
+
+    ps=duoa+'--summary'
+    if not os.path.isdir(ps):
+       os.mkdir(ps)
+
+    p0=os.path.join(ps,doi)
+    if not os.path.isdir(p0):
+       os.mkdir(p0)
+
+    fs=os.path.join(p0,'summary.html')
 
     hsummary=''
 
@@ -328,6 +358,183 @@ def generate(i):
     r=ck.save_text_file({'text_file':fs, 'string':hsummary})
     if r['return']>0: return r
 
+    # Prepare packs for ACM DL
+    ck.out('')
+    ck.out('Preparing artifact packs ...')
+    ck.out('')
+
+    os.chdir(curdir)
+
+    pa=duoa+'--artifacts'
+    if not os.path.isdir(pa):
+       os.mkdir(pa)
+
+    pp=duoa+'--papers'
+    if not os.path.isdir(pp):
+       os.mkdir(pp)
+
+    for a in artifacts:
+        aduoa=a['data_uoa']
+
+        ck.out('* '+aduoa)
+
+        da=a['dict']
+        dp=a['paper_dict']
+
+        aruoa=a['repo_uoa']
+
+        paper_doi=da.get('paper_doi','')
+        artifact_doi=da.get('artifact_doi','')
+
+        if paper_doi.startswith('https://doi.org/'):
+           paper_doi=paper_doi[16:]
+        paper_doi=paper_doi.replace('/','-')
+
+        if artifact_doi.startswith('https://doi.org/'):
+           artifact_doi=artifact_doi[16:]
+        artifact_doi=artifact_doi.replace('/','-')
+
+        # Compiling papers
+        if spg!='yes':
+           ck.out('********************************************')
+           ck.out('Cleaning paper sources ...')
+           ck.out('')
+
+           p1=os.path.join(pp,paper_doi)
+           if not os.path.isdir(p1):
+              os.mkdir(p1)
+
+           # Saving artifact dict
+           r=ck.save_json_to_file({'json_file':os.path.join(p1, cfg['file_artifact_meta']), 'dict':da})
+           if r['return']>0: return r
+
+           # Saving paper dict
+           r=ck.save_json_to_file({'json_file':os.path.join(p1, cfg['file_paper_meta']), 'dict':dp})
+           if r['return']>0: return r
+
+           cur_dir=os.getcwd()
+           ii={'action':'clean',
+               'module_uoa':cfg['module_deps']['dissemination.publication'],
+               'data_uoa':aduoa}
+           r=ck.access(ii)
+           if r['return']>0: return r
+           os.chdir(cur_dir)
+
+           ck.out('********************************************')
+           ck.out('Compiling paper sources ...')
+           ck.out('')
+
+           cur_dir=os.getcwd()
+           ii={'action':'compile',
+               'module_uoa':cfg['module_deps']['dissemination.publication'],
+               'data_uoa':aduoa}
+           r=ck.access(ii)
+           if r['return']>0: return r
+           os.chdir(cur_dir)
+
+           ck.out('********************************************')
+           ck.out('Copying paper ...')
+           ck.out('')
+
+           # Copying
+           ii={'action':'find',
+               'module_uoa':cfg['module_deps']['dissemination.publication'],
+               'data_uoa':aduoa}
+           r=ck.access(ii)
+           if r['return']>0: return r
+
+           pf1=os.path.join(r['path'],'paper.pdf')
+           pf2=os.path.join(p1, 'paper.pdf')
+
+           shutil.copy(pf1,pf2)
+
+        # Preparing artifacts
+        ck.out('********************************************')
+        ck.out('Preparing CK artifact snapshot ...')
+        ck.out('')
+
+        p2=os.path.join(pa,artifact_doi)
+
+        if os.path.isdir(p2):
+           shutil.rmtree(p2, onerror=ck.rm_read_only)
+
+        if not os.path.isdir(p2):
+           os.mkdir(p2)
+
+        # Saving artifact dict
+        r=ck.save_json_to_file({'json_file':os.path.join(p2, cfg['file_artifact_meta']), 'dict':da})
+        if r['return']>0: return r
+
+        # Saving paper dict
+        r=ck.save_json_to_file({'json_file':os.path.join(p2, cfg['file_paper_meta']), 'dict':dp})
+        if r['return']>0: return r
+
+        cur_dir=os.getcwd()
+        os.chdir(p2)
+
+        ii={'action':'snapshot',
+            'module_uoa':cfg['module_deps']['artifact'],
+            'repo':aruoa,
+            'file_name':'ck-workflow-',
+            'force_clean':'yes',
+            'copy_repos':'yes',
+            'out':oo}
+        r=ck.access(ii)
+        if r['return']>0: return r
+
+        os.chdir(cur_dir)
+
+        repo_results=da.get('ck_repo_results','')
+        if repo_results!='':
+
+           os.chdir(p2)
+
+           ii={'action':'snapshot',
+               'module_uoa':cfg['module_deps']['artifact'],
+               'repo':repo_results,
+               'no_deps':'yes',
+               'file_name':'ck-workflow-results-',
+               'force_clean':'yes',
+               'copy_repos':'yes',
+               'out':oo}
+           r=ck.access(ii)
+           if r['return']>0: return r
+
+           os.chdir(cur_dir)
+
+        # Check original repo
+        orepo=da.get('original_repo','')
+        if orepo!='':
+           import tempfile
+           ptmp=os.path.join(tempfile.gettempdir(),'tmp-original-repo')
+
+           if o=='con':
+              ck.out('Temp directory: '+ptmp)
+              ck.out('')
+
+           if os.path.isdir(ptmp):
+              shutil.rmtree(ptmp, onerror=ck.rm_read_only)
+
+           os.system('git clone '+orepo+' '+ptmp)
+
+           r=ck.list_all_files({'path':ptmp, 'all':'yes'})
+           if r['return']>0: return r
+
+           flx=r['list']
+
+           try:
+              f=open(os.path.join(p2, 'original-artifact.zip'), 'wb')
+              z=zipfile.ZipFile(f, 'w', zipfile.ZIP_DEFLATED)
+
+              for fn in flx:
+                  z.write(fn, fn, zipfile.ZIP_DEFLATED)
+
+              # ck-install.json
+              z.close()
+              f.close()
+
+           except Exception as e:
+              return {'return':1, 'error':'failed to prepare CK artifact collections ('+format(e)+')'}
 
 
     return {'return':0}

@@ -1150,6 +1150,7 @@ def run_script(i):
        script+='.sh'
 
     # Run script
+    os.chdir(p)
     os.system(script)
 
     return {'return':0}
