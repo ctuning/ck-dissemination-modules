@@ -447,6 +447,9 @@ def generate(i):
            pf1=os.path.join(r['path'],'paper.pdf')
            pf2=os.path.join(p1, 'paper.pdf')
 
+           if not os.path.isfile(pf1):
+              return {'return':1, 'error':'seems that paper PDF was not generated ('+pf1+')'}
+
            shutil.copy(pf1,pf2)
 
         # Preparing artifacts

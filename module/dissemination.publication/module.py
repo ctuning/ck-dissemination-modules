@@ -1143,11 +1143,11 @@ def run_script(i):
        s=sname
 
     script='_'+s
-    
+
     if platform.system().lower().startswith('win'):
        script+='.bat'
     else:
-       script+='.sh'
+       script='bash ./'+script+'.sh'
 
     # Run script
     os.chdir(p)
