@@ -38,6 +38,7 @@ def generate(i):
     Input:  {
               data_uoa                - proceedings entry
               (skip_paper_generation) - if 'yes', do not generate papers
+              (save_docker_images)    - if 'yes', save Docker images (on user host)
             }
 
     Output: {
@@ -54,9 +55,9 @@ def generate(i):
 
     curdir=os.getcwd()
 
-    o=i.get('out','')
+    ocon=(i.get('out','')=='con')
     oo=''
-    if o=='con': oo=o
+    if ocon: oo='con'
 
     # Check entry name
     duoa=i.get('data_uoa','')
@@ -86,7 +87,7 @@ def generate(i):
     url=d['url']
     short_name=d['short_name']
     doi=d.get('doi','')
-    
+
     # Get list of artifacts (papers, etc)
     artifacts=d.get('ck_artifacts',[])
 
@@ -510,10 +511,15 @@ def generate(i):
         # Check original repo
         orepo=da.get('original_repo','')
         if orepo!='':
+           if ocon:
+              ck.out('')
+              ck.out('Packing original repository ...')
+              ck.out('')
+
            import tempfile
            ptmp=os.path.join(tempfile.gettempdir(),'tmp-original-repo')
 
-           if o=='con':
+           if ocon:
               ck.out('Temp directory: '+ptmp)
               ck.out('')
 
@@ -535,9 +541,7 @@ def generate(i):
               f=open(os.path.join(p2,'original-artifact.zip'), 'wb')
               z=zipfile.ZipFile(f, 'w', zipfile.ZIP_DEFLATED)
 
-              print (ptmp)
               for fn in flx:
-                  print (fn)
                   z.write(os.path.join(ptmp,fn), fn, zipfile.ZIP_DEFLATED)
 
               # ck-install.json
@@ -548,5 +552,31 @@ def generate(i):
               return {'return':1, 'error':'failed to prepare CK artifact collections ('+format(e)+')'}
 
            shutil.rmtree(ptmp, onerror=ck.rm_read_only)
+
+        # Check original repo
+        docker_images=da.get('docker_images',[])
+        if len(docker_images)>0 and i.get('save_docker_images','')=='yes':
+           if ocon:
+              ck.out('')
+              ck.out('Preparing Docker images ...')
+
+           for dk in docker_images:
+               dduoa=dk['data_uoa']
+
+               if ocon:
+                  ck.out('')
+                  ck.out('Saving Docker image "'+dduoa+'" with sudo (we expect that you already prepared this image) ...')
+                  ck.out('')
+
+               fn='docker-image-'+dduoa+'.tar'
+               xfn=os.path.join(p2, fn)
+
+               r=ck.access({'action':'save',
+                            'module_uoa':cfg['module_deps']['docker'],
+                            'data_uoa':dduoa,
+                            'filename':xfn,
+                            'sudo':'yes',
+                            'out':oo})
+               if r['return']>0: return r
 
     return {'return':0}

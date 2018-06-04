@@ -15,6 +15,7 @@
   "module_deps": {
     "artifact": "417c3b437caa4594",
     "dissemination.publication": "29db2248aba45e59",
+    "docker":"88eef0cd8c43b68a",
     "person": "b0743a4044480ead"
   }
 }
