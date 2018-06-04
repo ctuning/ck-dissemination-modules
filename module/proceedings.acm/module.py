@@ -50,6 +50,7 @@ def generate(i):
 
     import os
     import shutil
+    import zipfile
 
     curdir=os.getcwd()
 
@@ -365,11 +366,11 @@ def generate(i):
 
     os.chdir(curdir)
 
-    pa=duoa+'--artifacts'
+    pa=os.path.join(curdir,duoa+'--artifacts')
     if not os.path.isdir(pa):
        os.mkdir(pa)
 
-    pp=duoa+'--papers'
+    pp=os.path.join(curdir,duoa+'--papers')
     if not os.path.isdir(pp):
        os.mkdir(pp)
 
@@ -469,31 +470,14 @@ def generate(i):
         r=ck.save_json_to_file({'json_file':os.path.join(p2, cfg['file_paper_meta']), 'dict':dp})
         if r['return']>0: return r
 
-        cur_dir=os.getcwd()
-        os.chdir(p2)
-
-        ii={'action':'snapshot',
-            'module_uoa':cfg['module_deps']['artifact'],
-            'repo':aruoa,
-            'file_name':'ck-workflow-',
-            'force_clean':'yes',
-            'copy_repos':'yes',
-            'out':oo}
-        r=ck.access(ii)
-        if r['return']>0: return r
-
-        os.chdir(cur_dir)
-
-        repo_results=da.get('ck_repo_results','')
-        if repo_results!='':
-
+        if True:
+           cur_dir=os.getcwd()
            os.chdir(p2)
 
            ii={'action':'snapshot',
                'module_uoa':cfg['module_deps']['artifact'],
-               'repo':repo_results,
-               'no_deps':'yes',
-               'file_name':'ck-workflow-results-',
+               'repo':aruoa,
+               'file_name':os.path.join(p2, 'ck-workflow-'),
                'force_clean':'yes',
                'copy_repos':'yes',
                'out':oo}
@@ -501,6 +485,24 @@ def generate(i):
            if r['return']>0: return r
 
            os.chdir(cur_dir)
+
+           repo_results=da.get('ck_repo_results','')
+           if repo_results!='':
+
+              os.chdir(p2)
+
+              ii={'action':'snapshot',
+                  'module_uoa':cfg['module_deps']['artifact'],
+                  'repo':repo_results,
+                  'no_deps':'yes',
+                  'file_name':os.path.join(p2, 'ck-workflow-results-'),
+                  'force_clean':'yes',
+                  'copy_repos':'yes',
+                  'out':oo}
+              r=ck.access(ii)
+              if r['return']>0: return r
+
+              os.chdir(cur_dir)
 
         # Check original repo
         orepo=da.get('original_repo','')
@@ -515,6 +517,10 @@ def generate(i):
            if os.path.isdir(ptmp):
               shutil.rmtree(ptmp, onerror=ck.rm_read_only)
 
+           orepo='https://github.com/ctuning/ck'
+           ck.out('')
+           ck.out('Cloning '+orepo+' ...')
+           ck.out('')
            os.system('git clone '+orepo+' '+ptmp)
 
            r=ck.list_all_files({'path':ptmp, 'all':'yes'})
@@ -523,11 +529,13 @@ def generate(i):
            flx=r['list']
 
            try:
-              f=open(os.path.join(p2, 'original-artifact.zip'), 'wb')
+              f=open(os.path.join(p2,'original-artifact.zip'), 'wb')
               z=zipfile.ZipFile(f, 'w', zipfile.ZIP_DEFLATED)
 
+              print (ptmp)
               for fn in flx:
-                  z.write(fn, fn, zipfile.ZIP_DEFLATED)
+                  print (fn)
+                  z.write(os.path.join(ptmp,fn), fn, zipfile.ZIP_DEFLATED)
 
               # ck-install.json
               z.close()
@@ -536,5 +544,6 @@ def generate(i):
            except Exception as e:
               return {'return':1, 'error':'failed to prepare CK artifact collections ('+format(e)+')'}
 
+           shutil.rmtree(ptmp, onerror=ck.rm_read_only)
 
     return {'return':0}

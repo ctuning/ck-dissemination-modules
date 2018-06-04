@@ -1,0 +1,236 @@
+{
+  "template_for_generator": [
+    {
+      "choice": [
+        "Novel",
+        "New",
+        "Reproducible"
+      ]
+    },
+    {
+      "choice": [
+        "technique",
+        "approach",
+        "tool",
+        "infrastructure",
+        "framework",
+        "methodology"
+      ],
+      "text": " "
+    },
+    {
+      "choice": [
+        "holistic",
+        "global",
+        "universal",
+        "open",
+        "systematic",
+        "realistic",
+        "practical"
+      ],
+      "text": " for "
+    },
+    {
+      "choice": [
+        "intelligent",
+        "multi-objective",
+        "multi-dimensional",
+        "smart",
+        "predictive analytics based",
+        "big data based",
+        "active learning based",
+        "machine learning based",
+        "SVM-based",
+        "KNN-based",
+        "DNN-based",
+        "DNN based",
+        "deep learning based",
+        "neural network based",
+        "dynamic features based",
+        "MICA based",
+        "static features based",
+        "semantic features based",
+        "CFG based",
+        "code pattern based",
+        "probabilistic",
+        "stochastic",
+        "reactive",
+        "phase-based",
+        "hardware counters based"
+      ],
+      "probability": 0.5,
+      "text": " and "
+    },
+    {
+      "choice": [
+        "benchmarking",
+        "model/sw/hw co-design",
+        "benchmarking",
+        "auto-tuning",
+        "iterative compilation",
+        "behavior modeling",
+        "optimization space exploration",
+        "design space exploration",
+        "feature selection",
+        "feature detection",
+        "algorithm tuning",
+        "compiler optimization",
+        "run-time adaptation",
+        "dynamic adaptation",
+        "scheduling",
+        "parallelization",
+        "SW/HW co-design"
+      ],
+      "text": " "
+    },
+    {
+      "choice": [
+        "improve performance",
+        "improve accuracy",
+        "reduce energy usage",
+        "reduce code size",
+        "reduce optimization time",
+        "balance multiple characteristics",
+        "select optimal accuracy, speed, throughput, latency, energy, costs on a Pareto frontier",
+        "balance algorithm accuracy, power consumption and speed",
+        "reduce power consumption",
+        "improve reliability",
+        "reduce errors",
+        "reduce usage costs",
+        "balance performance and energy"
+      ],
+      "probability": 0.4,
+      "text": " to "
+    },
+    {
+      "choice": [
+        "quantum computers",
+        "Intel MIC processors",
+        "Intel AI processors",
+        "AI processors",
+        "ARM processors",
+        "GPGPUs",
+        "accelerators",
+        "TPU",
+        "DSP",
+        "FPGAs",
+        "DNN accelerators",
+        "AI accelerators",
+        "neural network accelerators",
+        "architecture simulator",
+        "AMD processors",
+        "NVidia GPU processors",
+        "STMicroelectronics processors",
+        "architecture simulator",
+        "multi-core architectures",
+        "many-core architecture",
+        "heterogeneous systems",
+        "reconfigurable systems"
+      ],
+      "probability": 0.2,
+      "text": " for "
+    },
+    {
+      "choice": [
+        "mobile phones",
+        "IoT devices",
+        "tablets",
+        "laptops",
+        "exascale supercomputers",
+        "supercomputers",
+        "HPC servers",
+        "GRID systems",
+        "cloud services",
+        "data centers"
+      ],
+      "probability": 0.2,
+      "text": " in "
+    },
+    {
+      "choice": [
+        "Clang",
+        "LLVM",
+        "GCC",
+        "ICC",
+        "XLA compiler",
+        "XLC compiler",
+        "Java",
+        "Jikes",
+        "Testarossa compiler",
+        "ROSE source-to-source compiler",
+        "Polly",
+        "JIT compiler",
+        "source-to-source compiler"
+      ],
+      "probability": 0.2,
+      "text": " using "
+    },
+    {
+      "choice": [
+        "polyhedral transformations",
+        "inlining",
+        "unrolling",
+        "tiling",
+        "prefetching",
+        "OpenCL",
+        "OpenMP",
+        "CUDA",
+        "MPI",
+        "thread pinning",
+        "contention aware scheduling",
+        "binary to binary transformation",
+        "loop fusion/fission"
+      ],
+      "probability": 0.1,
+      "text": " with "
+    },
+    {
+      "choice": [
+        "exhaustive search",
+        "focused search",
+        "probabilistic search",
+        "random search",
+        "genetic search",
+        "decremental analysis",
+        "hill climbing",
+        "adaptive sampling",
+        "crowdsourcing"
+      ],
+      "probability": 0.4,
+      "text": " via "
+    },
+    {
+      "choice": [
+        "diverse",
+        "multiple",
+        "10",
+        "100",
+        "1000"
+      ],
+      "probability": 0.2,
+      "select_with_next": "yes",
+      "text": " with "
+    },
+    {
+      "choice": [
+        "image classification algorithms",
+        "deep learning algorithms",
+        "BLAS routines",
+        "SLAM algorithms",
+        "SPEC benchmarks",
+        "MLPerf benchmarks",
+        "kernels",
+        "microbenchmarks",
+        "codelets",
+        "workloads",
+        "programs",
+        "datasets",
+        "benchmarks"
+      ],
+      "text": " "
+    },
+    {
+      "text": "."
+    }
+  ]
+}

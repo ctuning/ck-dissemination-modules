@@ -1,0 +1,17 @@
+{
+  "backup_data_uid": "1c09c554605a8a98",
+  "backup_module_uid": "29db2248aba45e59",
+  "backup_module_uoa": "dissemination.publication",
+  "control": {
+    "engine": "CK",
+    "iso_datetime": "2014-11-10T22:25:48.129000",
+    "user_name": "cTuning foundation",
+    "version": [
+      "0",
+      "1",
+      "140810",
+      "beta"
+    ]
+  },
+  "data_name": "template-joke"
+}
