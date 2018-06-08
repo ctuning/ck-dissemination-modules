@@ -39,6 +39,10 @@ def generate(i):
               data_uoa                - proceedings entry
               (skip_paper_generation) - if 'yes', do not generate papers
               (save_docker_images)    - if 'yes', save Docker images (on user host)
+
+              (dtd_data_uoa)
+              (dtd_module_uoa)
+              (dtd_file)
             }
 
     Output: {
@@ -268,7 +272,7 @@ def generate(i):
        doi=doi[16:]
     doi=doi.replace('/','-')
 
-    ps=duoa+'--summary'
+    ps=duoa+'-summary'
     if not os.path.isdir(ps):
        os.mkdir(ps)
 
@@ -375,10 +379,134 @@ def generate(i):
     if not os.path.isdir(pp):
        os.mkdir(pp)
 
+    # Summary for ACM DL XML
+    pxml=os.path.join(curdir, duoa+'.xml')
+    sum_papers=[]
+
+    # Preparing info about a conference
+    sum_papers.append({'comment':'Submitted by: '+d.get('proceedings_submitted_by','')})
+
+    r=ck.get_current_date_time({})
+    if r['return']>0: return r
+
+    sum_papers.append({'comment':'Created: automatically by the CK framework ('+r['iso_datetime']+')'})
+
+    # Conference record
+    sum_papers.append({'conference_rec':[
+       {'conference_date':[
+         {'start_date':d.get('event_start_date','')},
+         {'end_date':d.get('event_end_date','')}]},
+       {'conference_loc':[
+         {'city':d.get('event_city','')},
+         {'state':d.get('event_state','')},
+         {'country':d.get('event_country','')}]},
+       {'conference_url':d.get('event_url','')}]})
+
+    # Series record
+    sum_papers.append({'series_rec':[
+     {'series_name':[
+       {'series_id':d.get('series_id','')},
+       {'series_title':d.get('series_title','')},
+       {'series_vol':d.get('series_vol','')}]}]})
+
+    # Organizers
+    organizers=[]
+    iq=0
+
+    dorg=d.get('organizers',[])
+    dadv=d.get('advisory_board',[])
+    dorg+=dadv
+    for org in dorg:
+        xorg=[]
+        iq+=1
+
+        first_name=org.get('first_name','')
+        last_name=org.get('last_name','')
+
+        aff=org.get('affiliation','')
+
+        role=org.get('role','')
+
+        extra=org.get('extra','')
+        if extra!='':
+           role+=' ('+extra+')'
+
+        xorg.append({'seq_no':str(iq)})
+        xorg.append({'first_name':first_name})
+        xorg.append({'last_name':last_name})
+        xorg.append({'affiliation':aff})
+        xorg.append({'role':role})
+
+        organizers.append({"ch_ed":xorg})
+
+    # Front matter
+    fm=d.get('front_matter',{})
+
+    xfm=[]
+    fm_file=''
+    if len(fm)>0:
+       fm_file=fm.get('fm_file','')
+       fm_text=fm.get('fm_text','')
+
+       if fm_file!='':
+          fm_file=duoa+'-'+fm_file
+
+       xfm.append({'fm_file':fm_file})
+       xfm.append({'fm_text':fm_text})
+
+    # Abstract
+    fa=d.get('abstract_file','')
+
+    pa=os.path.join(p, fa)
+    r=ck.load_text_file({'text_file':pa})
+    if r['return']>0: return r
+
+    abstract=[]
+    for a in r['string'].split('<par>'):
+        abstract.append({'par':a.strip()})
+
+    # Proceedings info
+    sum_papers.append({'proceeding_rec':[
+     {'proc_id':d.get('proc_id','')},
+     {'acronym':d.get('proc_acronym','')},
+     {'proc_desc':d.get('proc_desc','')},
+     {'conference_number':d.get('proc_conference_number','')},
+     {'proc_class':d.get('proc_class','')},
+     {'proc_title':d.get('proc_title','')},
+     {'proc_subtitle':d.get('proc_subtitle','')},
+     {'proc_volume_no':d.get('proc_volume_no','')},
+     {'doi_number':d.get('proc_doi_number','')},
+     {'isbn':d.get('proc_isbn','')},
+     {'isbn13':d.get('proc_isbn13','')},
+     {'copyright_year':d.get('proc_copyright_year','')},
+     {'publication_date':d.get('proc_publication_date','')},
+     {'pages':d.get('proc_pages','')},
+     {'abstract':abstract},
+     {'publisher':d.get('proc_publisher',[])},
+     {'sponsor_rec':d.get('proc_sponsor_rec',[])},
+     {'ccs2012':d.get('proc_ccs2012',[])},
+     {"chair_editor":organizers},
+     {"front_matter":xfm},
+     {"cms_conf_id":d.get('proc_cms_conf_id','')}
+     ]})
+
+    # Start content 
+    content=d.get('proc_content',[])
+    sum_papers.append({'content':content})
+
+    # Preparing papers and artifact packs
+    a_id=0
+    artifacts=[]
     for a in artifacts:
         aduoa=a['data_uoa']
 
-        ck.out('* '+aduoa)
+        a_id+=1
+        s_a_id=str(a_id)
+
+        ck.out(s_a_id+') '+aduoa)
+
+        # Summary per artifact
+        sum_artifact=[]
 
         da=a['dict']
         dp=a['paper_dict']
@@ -452,6 +580,11 @@ def generate(i):
               return {'return':1, 'error':'seems that paper PDF was not generated ('+pf1+')'}
 
            shutil.copy(pf1,pf2)
+
+           # Copying paper in ACM DL format
+           pf3=os.path.join(curdir, duoa+'-paper-'+s_a_id+'.pdf')
+
+           shutil.copy(pf1,pf3)
 
         # Preparing artifacts
         ck.out('********************************************')
@@ -578,5 +711,29 @@ def generate(i):
                             'sudo':'yes',
                             'out':oo})
                if r['return']>0: return r
+
+    # Record proceedings summary XML
+    if ocon:
+       ck.out('')
+       ck.out('Recording proceedings summary to XML (and validating if supported) ...')
+       ck.out('')
+
+    ii={'action':'generate',
+        'module_uoa':cfg['module_deps']['xml'],
+        'dict':sum_papers,
+        'root_key':'proceeding',
+        'root_attributes':{'ts':'05/09/2017', 'ver':'10.1'},
+        'xml_file':pxml}
+
+    dduoa=i.get('dtd_data_uoa','')
+    dmuoa=i.get('dtd_module_uoa','')
+    dfile=i.get('dtd_file','')
+
+    if dduoa!='': ii['data_uoa']=dduoa
+    if dmuoa!='': ii['dtd_module_uoa']=dmuoa
+    if dfile!='': ii['dtd_file']=dfile
+
+    r=ck.access(ii)
+    if r['return']>0: return r
 
     return {'return':0}
