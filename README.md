@@ -30,4 +30,4 @@ $ ck pull repo:ck-dissemination-modules
 Modules with actions
 ====================
 
-See [this list](https://github.com/ctuning/ck/wiki/Shared-modules).
+See [this list](http://cKnowledge.org/shared-modules.html).
