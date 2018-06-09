@@ -662,6 +662,33 @@ def generate(i):
 
             authors.append({'au':y})
 
+        reproducibility=[]
+        acm_badges=da.get('acm_badges',{})
+
+        r_available=acm_badges.get('available','')=='yes'
+        r_functional=acm_badges.get('functional','')=='yes'
+        r_replicated=acm_badges.get('replicated','')=='yes'
+        r_reproduced=acm_badges.get('reproduced','')=='yes'
+        r_reusable=acm_badges.get('reusable','')=='yes'
+
+        if r_available:
+           reproducibility.append({'reproducible':[
+             {'reproducible_type':'$%{"reproducible_types":"Artifacts_Available"}%$'}]})
+
+        if r_reusable:
+           reproducibility.append({'reproducible':[
+             {'reproducible_type':'$%{"reproducible_types":"Artifacts_Reusable"}%$'}]})
+        elif r_functional:
+           reproducibility.append({'reproducible':[
+             {'reproducible_type':'$%{"reproducible_types":"Artifacts_Functional"}%$'}]})
+
+        if r_replicated:
+           reproducibility.append({'reproducible':[
+             {'reproducible_type':'$%{"reproducible_types":"Results_Replicated"}%$'}]})
+        elif r_reproduced:
+           reproducibility.append({'reproducible':[
+             {'reproducible_type':'$%{"reproducible_types":"Results_Reproduced"}%$'}]})
+
         article_record=[
           {"article_id":article_id},
           {"sort_key":str(sort_key)},
@@ -679,7 +706,8 @@ def generate(i):
             {"file":[
               {"seq_no":str(seq_no)},
               {"fname":paper_file_name}]}]},
-          {"ccc":ccc}
+          {"ccc":ccc},
+          {"reproducibility":reproducibility}
         ]
 
         # Compiling papers
