@@ -68,6 +68,8 @@ def generate(i):
     if duoa=='':
        return {'return':1, 'error':'proceedings entry is not specified. Use "ck generate proceedings.acm:{proceedings name such as request.asplos18}"'}
 
+    xduoa=duoa.replace('.','-')
+
     # Load entry
     r=ck.access({'action':'load',
                  'module_uoa':work['self_module_uid'],
@@ -133,7 +135,7 @@ def generate(i):
     ck.out('')
     ck.out('Generating paper and artifact table ...')
 
-    f=duoa+'--ctuning-ae-artifacts.html'
+    f=xduoa+'-ctuning-ae-artifacts.html'
 
     anchor=short_name.lower().replace("'","")
 
@@ -272,7 +274,7 @@ def generate(i):
        doi=doi[16:]
     doi=doi.replace('/','-')
 
-    ps=duoa+'-summary'
+    ps=xduoa+'-summary'
     if not os.path.isdir(ps):
        os.mkdir(ps)
 
@@ -371,16 +373,16 @@ def generate(i):
 
     os.chdir(curdir)
 
-    pa=os.path.join(curdir,duoa+'--artifacts')
+    pa=os.path.join(curdir,xduoa+'--artifacts')
     if not os.path.isdir(pa):
        os.mkdir(pa)
 
-    pp=os.path.join(curdir,duoa+'--papers')
+    pp=os.path.join(curdir,xduoa+'--papers')
     if not os.path.isdir(pp):
        os.mkdir(pp)
 
     # Summary for ACM DL XML
-    pxml=os.path.join(curdir, duoa+'.xml')
+    pxml=os.path.join(curdir, xduoa+'.xml')
     sum_papers=[]
 
     # Preparing info about a conference
@@ -449,7 +451,7 @@ def generate(i):
        fm_text=fm.get('fm_text','')
 
        if fm_file!='':
-          fm_file=duoa+'-'+fm_file
+          fm_file=xduoa+'-'+fm_file
 
        xfm.append({'fm_file':fm_file})
        xfm.append({'fm_text':fm_text})
@@ -457,8 +459,8 @@ def generate(i):
     # Abstract
     fa=d.get('abstract_file','')
 
-    pa=os.path.join(p, fa)
-    r=ck.load_text_file({'text_file':pa})
+    pabs=os.path.join(p, fa)
+    r=ck.load_text_file({'text_file':pabs})
     if r['return']>0: return r
 
     abstract=[]
@@ -494,9 +496,72 @@ def generate(i):
     content=d.get('proc_content',[])
     sum_papers.append({'content':content})
 
+    # Compiling front matter if exists
+    fm_uoa=fm.get('data_uoa','')
+    if spg!='yes' and fm_uoa!='':
+       ck.out('')
+       ck.out('* Preparing front-matter ...')
+       ck.out('')
+
+       ck.out('********************************************')
+       ck.out('Cleaning front matter sources ...')
+       ck.out('')
+
+       cur_dir=os.getcwd()
+       ii={'action':'clean',
+           'module_uoa':cfg['module_deps']['dissemination.publication'],
+           'data_uoa':fm_uoa}
+       r=ck.access(ii)
+       if r['return']>0: return r
+       os.chdir(cur_dir)
+
+       ck.out('********************************************')
+       ck.out('Compiling front-matter sources ...')
+       ck.out('')
+
+       cur_dir=os.getcwd()
+       ii={'action':'compile',
+           'module_uoa':cfg['module_deps']['dissemination.publication'],
+           'data_uoa':fm_uoa}
+       r=ck.access(ii)
+       if r['return']>0: return r
+       os.chdir(cur_dir)
+
+       ck.out('********************************************')
+       ck.out('Copying paper ...')
+       ck.out('')
+
+       # Copying
+       ii={'action':'find',
+           'module_uoa':cfg['module_deps']['dissemination.publication'],
+           'data_uoa':fm_uoa}
+       r=ck.access(ii)
+       if r['return']>0: return r
+
+       pf1=os.path.join(r['path'],'paper.pdf')
+
+       if not os.path.isfile(pf1):
+          return {'return':1, 'error':'seems that paper PDF was not generated ('+pf1+')'}
+
+       # Copying paper in ACM DL format
+       pf3=os.path.join(curdir, fm_file)
+
+       shutil.copy(pf1,pf3)
+
     # Preparing papers and artifact packs
+    seq_no=1
     a_id=0
-    artifacts=[]
+    sort_key=30
+
+    paper_section=[
+      {"sort_key":str(sort_key)},
+      {"section_seq_no":str(2)},
+      {"section_type":"SESSION"},
+      {"section_title":"Artifact presentations"},
+      {"section_page_from":""}
+    ]
+    content.append({"section":paper_section})
+
     for a in artifacts:
         aduoa=a['data_uoa']
 
@@ -508,8 +573,12 @@ def generate(i):
         # Summary per artifact
         sum_artifact=[]
 
+        sort_key+=10
+        seq_no+=1 # can start in a previous section (keynote)
+
         da=a['dict']
         dp=a['paper_dict']
+        paper_path=a['paper_path']
 
         aruoa=a['repo_uoa']
 
@@ -523,6 +592,53 @@ def generate(i):
         if artifact_doi.startswith('https://doi.org/'):
            artifact_doi=artifact_doi[16:]
         artifact_doi=artifact_doi.replace('/','-')
+
+        # Check if has abstract
+        fa=da.get('abstract_file','')
+        if fa=='': fa='paper_abstract.txt'
+
+        pabs=os.path.join(paper_path, fa)
+        abstract=[]
+
+        xa=['']
+        r=ck.load_text_file({'text_file':pabs})
+        if r['return']==0:
+           xa=r['string'].split('<par>')
+
+        for a in xa:
+            abstract.append({'par':a.strip()})
+
+        # Article XML
+        article_id=''
+        j=paper_doi.find('/')
+        if j>0:
+           article_id=paper_doi[j+1:].strip()
+
+        paper_file_name=xduoa+'-paper-'+s_a_id+'.pdf'
+
+        ccc=[{'copyright_holder':[
+                {'copyright_holder_name':'ACM'},
+                {'copyright_holder_year':'2018'}]}]
+
+        article_record=[
+          {"article_id":article_id},
+          {"sort_key":str(sort_key)},
+          {"display_label":"p"},
+          {"article_publication_date":d.get('proc_publication_date','')},
+          {"seq_no":str(seq_no)},
+          {"title":dp.get('title','')},
+          {"doi_number":paper_doi},
+          {"url":""},
+          {"abstract":abstract},
+          {"keywords":[]},
+          {"ccs2012":d.get('proc_ccs2012','')},
+          {"authors":[]},
+          {"fulltext": [
+            {"file":[
+              {"seq_no":str(seq_no)},
+              {"fname":paper_file_name}]}]},
+          {"ccc":ccc}
+        ]
 
         # Compiling papers
         if spg!='yes':
@@ -582,9 +698,11 @@ def generate(i):
            shutil.copy(pf1,pf2)
 
            # Copying paper in ACM DL format
-           pf3=os.path.join(curdir, duoa+'-paper-'+s_a_id+'.pdf')
+           pf3=os.path.join(curdir, paper_file_name)
 
            shutil.copy(pf1,pf3)
+
+        paper_section.append({"article_rec":article_record})
 
         # Preparing artifacts
         ck.out('********************************************')
@@ -711,6 +829,12 @@ def generate(i):
                             'sudo':'yes',
                             'out':oo})
                if r['return']>0: return r
+
+    # Check proc content 2 (panels, etc)
+    content2=d.get('proc_content2',[])
+    if len(content2)>0:
+       print ('TBD')
+       # sum_papers.append({'content':content2})
 
     # Record proceedings summary XML
     if ocon:
