@@ -465,7 +465,7 @@ def generate(i):
 
     abstract=[]
     for a in r['string'].split('<par>'):
-        abstract.append({'par':a.strip()})
+        abstract.append({'par':a.strip().replace('\n',' ')})
 
     # Proceedings info
     sum_papers.append({'proceeding_rec':[
@@ -606,7 +606,7 @@ def generate(i):
            xa=r['string'].split('<par>')
 
         for a in xa:
-            abstract.append({'par':a.strip()})
+            abstract.append({'par':a.strip().replace('\n',' ')})
 
         # Article XML
         article_id=''
@@ -620,6 +620,48 @@ def generate(i):
                 {'copyright_holder_name':'ACM'},
                 {'copyright_holder_year':'2018'}]}]
 
+        keywords=[]
+        for k in da.get('keywords',[]):
+            keywords.append({'kw':k})
+        if len(keywords)==0:
+           keywords=[{'kw':''}]
+
+        authors=[]
+        author_seq_no=0
+        affiliations=dp.get('affiliations',{})
+        for au in dp.get('authors',[]):
+            author_seq_no+=1
+
+            name=au.get('name','')
+            aff=au.get('affiliation','').split(',')
+            email_address=au.get('email_address','')
+
+            affiliation=''
+            for x in aff:
+                if x!='':
+                   if affiliation!='': affiliation+='; '
+                   affiliation+=affiliations[x]['name']
+
+            r=ck.access({'action':'load',
+                         'module_uoa':cfg['module_deps']['person'],
+                         'data_uoa':name})
+            if r['return']>0: return r
+            dperson=r['dict']
+
+            first_name=dperson.get('first_name','')
+            last_name=dperson.get('last_name','')
+
+            y=[
+                {'seq_no':str(author_seq_no)},
+                {'first_name':first_name},
+                {'last_name':last_name},
+                {'affiliation':affiliation},
+                {'role':'AUTHOR'},
+                {'email_address':email_address}
+              ]
+
+            authors.append({'au':y})
+
         article_record=[
           {"article_id":article_id},
           {"sort_key":str(sort_key)},
@@ -630,9 +672,9 @@ def generate(i):
           {"doi_number":paper_doi},
           {"url":""},
           {"abstract":abstract},
-          {"keywords":[]},
+          {"keywords":keywords},
           {"ccs2012":d.get('proc_ccs2012','')},
-          {"authors":[]},
+          {"authors":authors},
           {"fulltext": [
             {"file":[
               {"seq_no":str(seq_no)},
@@ -705,6 +747,9 @@ def generate(i):
         paper_section.append({"article_rec":article_record})
 
         # Preparing artifacts
+        if i.get('skip_artifacts','')=='yes':
+           continue
+
         ck.out('********************************************')
         ck.out('Preparing CK artifact snapshot ...')
         ck.out('')
