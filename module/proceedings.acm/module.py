@@ -878,8 +878,14 @@ def generate(i):
     # Check proc content 2 (panels, etc)
     content2=d.get('proc_content2',[])
     if len(content2)>0:
-       print ('TBD')
-       # sum_papers.append({'content':content2})
+       section=[
+         {'sort_key':str(sort_key+10)},
+         {'section_seq_no':'3'},
+       ]
+
+       section+=content2
+
+       content.append({'section':section})
 
     # Record proceedings summary XML
     if ocon:
