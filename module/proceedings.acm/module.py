@@ -179,6 +179,7 @@ def generate(i):
 
         ck_results=da.get('ck_results','')
         ck_workflow=da.get('ck_workflow','')
+
         original_repo=da.get('original_repo','')
 
         authors=dp.get('authors',[])
@@ -580,17 +581,35 @@ def generate(i):
         dp=a['paper_dict']
         paper_path=a['paper_path']
 
+        paper_title=dp.get('title','')
+
         aruoa=a['repo_uoa']
+
+        ck_workflow=da.get('ck_workflow','')
+
+        ck_workflow_readme=da.get('ck_workflow_readme','')
+        if ck_workflow_readme=='':
+           ck_workflow_readme=ck_workflow
+
+        # Check path to repo
+        r=ck.access({'action':'where',
+                     'module_uoa':cfg['module_deps']['repo'],
+                     'data_uoa':aruoa})
+        if r['return']>0: return r
+        repo_path=r['path']
 
         paper_doi=da.get('paper_doi','')
         artifact_doi=da.get('artifact_doi','')
 
         if paper_doi.startswith('https://doi.org/'):
            paper_doi=paper_doi[16:]
+        original_paper_doi=paper_doi
         paper_doi=paper_doi.replace('/','-')
 
+        real_artifact_doi=''
         if artifact_doi.startswith('https://doi.org/'):
            artifact_doi=artifact_doi[16:]
+           real_artifact_doi=artifact_doi
         artifact_doi=artifact_doi.replace('/','-')
 
         # Check if has abstract
@@ -610,11 +629,18 @@ def generate(i):
 
         # Article XML
         article_id=''
-        j=paper_doi.find('/')
+        j=original_paper_doi.find('/')
         if j>0:
-           article_id=paper_doi[j+1:].strip()
+           article_id=original_paper_doi[j+1:].strip()
 
         paper_file_name=xduoa+'-paper-'+s_a_id+'.pdf'
+        artifact_xml=xduoa+'-artifact-'+s_a_id+'.xml'
+
+        artifact_ck_readme=xduoa+'-artifact-'+s_a_id+'-ck-readme.md'
+        artifact_ck_workflow=xduoa+'-artifact-'+s_a_id+'-ck-workflow'
+        artifact_ck_results=xduoa+'-artifact-'+s_a_id+'-ck-results'
+        artifact_original=xduoa+'-artifact-'+s_a_id+'-original.zip'
+        artifact_docker=xduoa+'-artifact-'+s_a_id+'-docker.tar'
 
         ccc=[{'copyright_holder':[
                 {'copyright_holder_name':'ACM'},
@@ -627,6 +653,7 @@ def generate(i):
            keywords=[{'kw':''}]
 
         authors=[]
+        contributors=[]
         author_seq_no=0
         affiliations=dp.get('affiliations',{})
         for au in dp.get('authors',[]):
@@ -662,7 +689,10 @@ def generate(i):
 
             authors.append({'au':y})
 
+            contributors.append({'contrib':y})
+
         reproducibility=[]
+        a_reproducibility=[]
         acm_badges=da.get('acm_badges',{})
 
         r_available=acm_badges.get('available','')=='yes'
@@ -671,23 +701,29 @@ def generate(i):
         r_reproduced=acm_badges.get('reproduced','')=='yes'
         r_reusable=acm_badges.get('reusable','')=='yes'
 
+        r_url={'description_url':'http://ctuning.org/ae/reviewing-20171101.html'}
+
         if r_available:
            reproducibility.append({'reproducible':[
-             {'reproducible_type':'$%{"reproducible_types":"Artifacts_Available"}%$'}]})
+             {'reproducible_type':'$%{"reproducible_types":"Artifacts_Available"}%$'},r_url]})
 
         if r_reusable:
            reproducibility.append({'reproducible':[
-             {'reproducible_type':'$%{"reproducible_types":"Artifacts_Reusable"}%$'}]})
+             {'reproducible_type':'$%{"reproducible_types":"Artifacts_Reusable"}%$'},r_url]})
         elif r_functional:
            reproducibility.append({'reproducible':[
-             {'reproducible_type':'$%{"reproducible_types":"Artifacts_Functional"}%$'}]})
+             {'reproducible_type':'$%{"reproducible_types":"Artifacts_Functional"}%$'},r_url]})
 
         if r_replicated:
-           reproducibility.append({'reproducible':[
-             {'reproducible_type':'$%{"reproducible_types":"Results_Replicated"}%$'}]})
+           x={'reproducible':[{'reproducible_type':'$%{"reproducible_types":"Results_Replicated"}%$'},r_url]}
+           reproducibility.append(x)
+           a_reproducibility.append(x)
         elif r_reproduced:
-           reproducibility.append({'reproducible':[
-             {'reproducible_type':'$%{"reproducible_types":"Results_Reproduced"}%$'}]})
+           x={'reproducible':[{'reproducible_type':'$%{"reproducible_types":"Results_Reproduced"}%$'},r_url]}
+           reproducibility.append(x)
+           a_reproducibility.append(x)
+
+        linked_articles=[]
 
         article_record=[
           {"article_id":article_id},
@@ -696,7 +732,7 @@ def generate(i):
           {"article_publication_date":d.get('proc_publication_date','')},
           {"seq_no":str(seq_no)},
           {"title":dp.get('title','')},
-          {"doi_number":paper_doi},
+          {"doi_number":original_paper_doi},
           {"url":""},
           {"abstract":abstract},
           {"keywords":keywords},
@@ -708,6 +744,85 @@ def generate(i):
               {"fname":paper_file_name}]}]},
           {"ccc":ccc},
           {"reproducibility":reproducibility}
+        ]
+
+        aver=da.get('artifact_version','')
+        if aver=='': aver='1.0'
+
+        ai=[
+            {
+              "general_inst": [
+                {
+                  "software_dependencies": "Check Artifact Appendix in the original paper or README at "+ck_workflow_readme+" for details."
+                }, 
+                {
+                  "hardware_dependencies": "Check Artifact Appendix in the original paper or README at "+ck_workflow_readme+" for details."
+                }, 
+                {
+                  "installation": "Check Artifact Appendix in the original paper or README at "+ck_workflow_readme+" for details. CK framework will attempt to automatically detect the required software and install missing packages for a given hardware. see reusable CK packages at http://cknowledge.org/shared-packages.html."
+                }
+              ]
+            }, 
+            {
+              "experimental_inst": [
+                {
+                  "installation": "Through Collective Knowledge workflow. Check Artifact Appendix in the original paper or README at "+ck_workflow_readme+" for details."
+                }, 
+                {
+                  "parameterization": "Through Collective Knowledge workflow."
+                }, 
+                {
+                  "worksflow": "Collective Knowledge: https://github.com/ctuning/ck"
+                }, 
+                {
+                  "evaluation": "Automated through Collective Knowledge workflow. Check Artifact Appendix in the original paper or README at "+ck_workflow_readme+" for details. See all shared results at the ReQuEST dashboard: http://cKnowledge.org/request-results."
+                }
+              ]
+            }
+          ]
+
+        fulltext=[
+          {'file':[
+            {'fname':artifact_ck_readme},
+            {'description':'Information about how to prepare artifact and reproduce experiments using Collective Knowledge framework'},
+            {'caption_file':'Reproducibility README'}
+          ]}]
+
+        license_url=da.get('license_url','')
+        if license_url=='':
+           license_url=ck_workflow+'/blob/master/LICENSE.txt'
+
+        linked_articles=[
+          {"linked_article": [
+            {"article_doi":original_paper_doi},
+            {"title":paper_title},
+            {"description":""}]}]
+
+        lca=d.get('linked_ck_article',[])
+        if len(lca)>0:
+           linked_articles.append({"linked_article":lca})
+
+        xartifact=[
+          {'artifact_doi':real_artifact_doi},
+          {'artifact_type':'$%{"artif_types":"software"}%$'},
+          {'artifact_publication_date':d.get('proc_publication_date','')},
+          {'title':'Collective Knowledge Workflow for '+dp.get('title','')},
+          {'version':aver},
+          {'contributors':contributors},
+          {"artifact_instructions":ai},
+          {"keywords":keywords},
+          {"acm_ccs":d.get('proc_ccs2012','')},
+          {"fulltext":fulltext},
+          {"license":da.get('license','')},
+          {"license_url":license_url},
+          {'publisher':d.get('proc_publisher',[])},
+          {'reproducibility':a_reproducibility},
+          {"copyrights":[
+            {"copyright_holder": [
+              {"copyright_holder_name":da.get('copyright_holder_name','')},
+              {"copyright_holder_year":da.get('copyright_holder_year','')}]}]},
+          {"artifact_links": [
+            {"linked_articles": linked_articles}]}
         ]
 
         # Compiling papers
@@ -782,6 +897,10 @@ def generate(i):
         ck.out('Preparing CK artifact snapshot ...')
         ck.out('')
 
+        preadme=os.path.join(repo_path,'README.md')
+        if os.path.isfile(preadme):
+           shutil.copy(preadme, os.path.join(cur_dir,artifact_ck_readme))
+
         p2=os.path.join(pa,artifact_doi)
 
         if os.path.isdir(p2):
@@ -805,7 +924,9 @@ def generate(i):
            ii={'action':'snapshot',
                'module_uoa':cfg['module_deps']['artifact'],
                'repo':aruoa,
-               'file_name':os.path.join(p2, 'ck-workflow-'),
+#               'file_name':os.path.join(p2, 'ck-workflow-'),
+               'file_name':os.path.join(cur_dir, artifact_ck_workflow),
+               'date':' ',
                'force_clean':'yes',
                'copy_repos':'yes',
                'out':oo}
@@ -813,6 +934,13 @@ def generate(i):
            if r['return']>0: return r
 
            os.chdir(cur_dir)
+
+           fulltext.append(
+             {"file": [
+               {"fname":artifact_ck_workflow+'.zip'},
+               {"description":"Collective Knowledge workflow snapshot to automatically rebuild environment on a user platform, run a given workflow, reproduce expeirments and reuse artifacts"},
+               {"caption_file":"zip file"}
+             ]})
 
            repo_results=da.get('ck_repo_results','')
            if repo_results!='':
@@ -823,7 +951,9 @@ def generate(i):
                   'module_uoa':cfg['module_deps']['artifact'],
                   'repo':repo_results,
                   'no_deps':'yes',
-                  'file_name':os.path.join(p2, 'ck-workflow-results-'),
+#                  'file_name':os.path.join(p2, 'ck-workflow-results-'),
+                  'file_name':os.path.join(cur_dir, artifact_ck_results),
+                  'date':' ',
                   'force_clean':'yes',
                   'copy_repos':'yes',
                   'out':oo}
@@ -831,6 +961,13 @@ def generate(i):
               if r['return']>0: return r
 
               os.chdir(cur_dir)
+
+              fulltext.append(
+                {"file": [
+                  {"fname":artifact_ck_results+'.zip'},
+                  {"description":"Snapshot of experimental results in the Collective Knowledge format (https://github.com/ctuning/ck/wiki)"},
+                  {"caption_file":"zip file"}
+                ]})
 
         # Check original repo
         orepo=da.get('original_repo','')
@@ -862,7 +999,9 @@ def generate(i):
            flx=r['list']
 
            try:
-              f=open(os.path.join(p2,'original-artifact.zip'), 'wb')
+#              f=open(os.path.join(p2,'original-artifact.zip'), 'wb')
+              f=open(os.path.join(cur_dir,artifact_original), 'wb')
+
               z=zipfile.ZipFile(f, 'w', zipfile.ZIP_DEFLATED)
 
               for fn in flx:
@@ -892,8 +1031,10 @@ def generate(i):
                   ck.out('Saving Docker image "'+dduoa+'" with sudo (we expect that you already prepared this image) ...')
                   ck.out('')
 
-               fn='docker-image-'+dduoa+'.tar'
-               xfn=os.path.join(p2, fn)
+#               fn='docker-image-'+dduoa+'.tar'
+#               xfn=os.path.join(p2, fn)
+
+               xfn=os.path.join(cur_dir, artifact_docker)
 
                r=ck.access({'action':'save',
                             'module_uoa':cfg['module_deps']['docker'],
@@ -902,6 +1043,30 @@ def generate(i):
                             'sudo':'yes',
                             'out':oo})
                if r['return']>0: return r
+
+               fulltext.append(
+                 {"file": [
+                   {"fname":artifact_docker},
+                   {"description":"Docker image containing Collective Knowledge workflow snapshot to automatically rebuild environment on a user platform, run a given workflow and reproduce expeirments"},
+                   {"caption_file":"Docker file"}
+                 ]})
+
+        ii={'action':'generate',
+            'module_uoa':cfg['module_deps']['xml'],
+            'dict':[{'artifact':xartifact}],
+            'root_key':'artifacts',
+            'xml_file':artifact_xml}
+
+        dduoa=i.get('dtd_data_uoa','')
+        dmuoa=i.get('dtd_module_uoa','')
+        dfile=i.get('dtd_artifact_file','')
+
+        if dduoa!='': ii['data_uoa']=dduoa
+        if dmuoa!='': ii['dtd_module_uoa']=dmuoa
+        if dfile!='': ii['dtd_file']=dfile
+
+        r=ck.access(ii)
+        if r['return']>0: return r
 
     # Check proc content 2 (panels, etc)
     content2=d.get('proc_content2',[])
