@@ -136,6 +136,7 @@ def generate(i):
     ck.out('Generating paper and artifact table ...')
 
     f=xduoa+'-ctuning-ae-artifacts.html'
+    ftex=xduoa+'-ctuning-ae-artifacts.tex'
 
     anchor=short_name.lower().replace("'","")
 
@@ -154,8 +155,11 @@ def generate(i):
     h+='\n'
 
     hartifacts=''
+    tex=''
 
     hartifacts+='<table border="1" style="border-width: 1px;border-spacing:0px;" cellpadding="5">\n'
+    tex+='\\begin{tabular}{|p{2.85in}|p{0.52in}|p{0.62in}|p{0.56in}|p{0.69in}|p{0.63in}|}\n'
+    tex+='\\hline\\hline\n'
 
     hartifacts+=' <tr>\n'
     hartifacts+='  <td valign="top"><b>Paper</b></td>\n'
@@ -165,6 +169,14 @@ def generate(i):
     hartifacts+='  <td valign="top"><b>Results reproduced</b></td>\n'
     hartifacts+='  <td valign="top"><b>Results replicated</b></td>\n'
     hartifacts+=' </tr>\n'
+
+    tex+='  \\begin{center}\\small\\textbf{Paper}\\end{center} & '
+    tex+='  \\begin{center}\\small\\textbf{Artifact\\newline available}\\end{center} & '
+    tex+='  \\begin{center}\\small\\textbf{Artifact\\newline functional}\\end{center} & '
+    tex+='  \\begin{center}\\small\\textbf{Artifact\\newline reusable}\\end{center} & '
+    tex+='  \\begin{center}\\small\\textbf{Results\\newline reproduced}\\end{center} & '
+    tex+='  \\begin{center}\\small\\textbf{Results\\newline replicated}\\end{center} \\\\\n'
+    tex+='\\hline\n'
 
     for a in artifacts:
         aduoa=a['data_uoa']
@@ -211,61 +223,95 @@ def generate(i):
         hartifacts+=' <tr>\n'
 
         x='<b>'+title+'</b><br><i>'+xauthors+'</i><p>\n'
+        tex+='  \\textbf{'+title+'}\\newline\\newline{'+xauthors+'}\\newline\\newline'
+
         if paper_doi!='':
            x+=' [ <a href="'+paper_doi+'">Paper DOI</a> ]'
+           tex+=' [~\\href{'+paper_doi+'}{Paper DOI}~]'
         if artifact_doi!='':
            x+=' [ <a href="'+artifact_doi+'">Artifact DOI</a> ]\n'
+           tex+=' [~\\href{'+artifact_doi+'}{Artifact DOI}~]'
         if original_repo!='':
            x+=' [ <a href="'+original_repo+'">Original artifact</a> ]\n'
+           tex+=' [~\\href{'+original_repo+'}{Original artifact}~]'
         if ck_workflow!='':
            x+=' [ <a href="'+ck_workflow+'">CK workflow</a> ]\n'
+           tex+=' [~\\href{'+ck_workflow+'}{CK workflow}~]'
         if ck_results!='':
            x+=' [ <a href="'+ck_results+'">CK results</a> ]\n'
+           tex+=' [~\\href{'+ck_results+'}{CK results}~]'
+
+        tex+='\\newline & '
 
         hartifacts+='  <td valign="top">\n'
         hartifacts+='   '+x+'\n'
         hartifacts+='  </td>\n'
 
         x=''
+        y='~'
         if b_available:
            x='<img src="https://www.acm.org/binaries/content/gallery/acm/publications/replication-badges/artifacts_available_dl.jpg" width="64"><br>'
+           y='\\begin{center}\\includegraphics{ck-assets/artifacts_available_dl.jpg}\\end{center}'
         hartifacts+='  <td valign="top" align="center">'+x+'</td>\n'
+        tex+=' '+y+' & '
 
         x=''
+        y='~'
         if b_functional and not b_reusable:
            x='<img src="https://www.acm.org/binaries/content/gallery/acm/publications/replication-badges/artifacts_evaluated_functional_dl.jpg" width="64"><br>'
+           y='\\begin{center}\\includegraphics{ck-assets/artifacts_evaluated_functional_dl.jpg}\\end{center}'
         hartifacts+='  <td valign="top" align="center">\n'
         hartifacts+='   '+x+'\n'
         hartifacts+='  </td>\n'
+        tex+=' '+y+' & '
 
         x=''
+        y='~'
         if b_reusable:
            x='<img src="https://www.acm.org/binaries/content/gallery/acm/publications/replication-badges/artifacts_evaluated_reusable_dl.jpg" width="64"><br>'
+           y='\\begin{center}\\includegraphics{ck-assets/artifacts_evaluated_reusable_dl.jpg}\\end{center}'
         hartifacts+='  <td valign="top" align="center">\n'
         hartifacts+='   '+x+'\n'
         hartifacts+='  </td>\n'
+        tex+=' '+y+' & '
 
         x=''
+        y='~'
         if b_reproduced:
            x='<img src="https://www.acm.org/binaries/content/gallery/acm/publications/replication-badges/results_reproduced_dl.jpg" width="64"><br>'
+           y='\\begin{center}\\includegraphics{ck-assets/results_reproduced_dl.jpg}\\end{center}'
         hartifacts+='  <td valign="top" align="center">\n'
         hartifacts+='   '+x+'\n'
         hartifacts+='  </td>\n'
+        tex+=' '+y+' & '
 
         x=''
+        y='~'
         if b_replicated:
            x='<img src="https://www.acm.org/binaries/content/gallery/acm/publications/replication-badges/results_replicated_dl.jpg" width="64"><br>'
+           y='\\begin{center}\\includegraphics{ck-assets/results_replicated_dl.jpg}\\end{center}'
         hartifacts+='  <td valign="top" align="center">\n'
         hartifacts+='   '+x+'\n'
         hartifacts+='  </td>\n'
+        tex+=' '+y+' \\\\\n'
 
         hartifacts+=' </tr>\n'
+
+        tex+='\\hline\n'
 
     hartifacts+='</table>\n'
     h+=hartifacts
 
+    tex+='\\hline\n'
+    tex+='\\end{tabular}\n'
+
     r=ck.save_text_file({'text_file':f, 'string':h})
     if r['return']>0: return r
+
+    r=ck.save_text_file({'text_file':ftex, 'string':tex})
+    if r['return']>0: return r
+
+    exit(1)
 
     # Generating summary for ACM DL
     ck.out('')
