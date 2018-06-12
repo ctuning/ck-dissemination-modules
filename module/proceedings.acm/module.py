@@ -346,8 +346,6 @@ def generate(i):
     r=ck.save_text_file({'text_file':fcsv, 'string':csv})
     if r['return']>0: return r
 
-    exit(1)
-
     # Generating summary for ACM DL
     ck.out('')
     ck.out('Generating proceedings summary for ACM DL ...')
