@@ -199,10 +199,24 @@ def generate(i):
 
         original_repo=da.get('original_repo','')
 
+        csv_authors=''
+        csv_emails1=''
+        csv_emails2=''
+
         authors=dp.get('authors',[])
         xauthors=''
+        affiliations=dp.get('affiliations',{})
         for q in authors:
             name=q.get('name','')
+            aff=q.get('affiliation','').split(',')
+            email=q.get('email_address','')
+
+            affiliation=''
+            for x in aff:
+                if x!='':
+                   if affiliation!='': affiliation+='; '
+                   affiliation+=affiliations[x]['name']
+
             if name!='':
                # Check if has entry or just a name
                r=ck.access({'action':'load',
@@ -217,7 +231,18 @@ def generate(i):
 
             xauthors+=name
 
-        csv+='"Full Paper","'+title+'","","","","'+str(paper_id)+'"\n'
+            if csv_authors!='':
+               csv_authors+=';'
+            csv_authors+=name+':'+affiliation
+
+            if csv_emails1=='':
+               csv_emails1=email
+            else:
+               if csv_emails2!='':
+                  csv_emails2+=';'
+               csv_emails2+=email
+
+        csv+='"Full Paper","'+title+'","'+csv_authors+'","'+csv_emails1+'","'+csv_emails2+'","'+str(paper_id)+'"\n'
 
         badges=da.get('acm_badges',{})
 
@@ -320,6 +345,8 @@ def generate(i):
 
     r=ck.save_text_file({'text_file':fcsv, 'string':csv})
     if r['return']>0: return r
+
+    exit(1)
 
     # Generating summary for ACM DL
     ck.out('')
