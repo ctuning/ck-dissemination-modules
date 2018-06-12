@@ -136,7 +136,8 @@ def generate(i):
     ck.out('Generating paper and artifact table ...')
 
     f=xduoa+'-ctuning-ae-artifacts.html'
-    ftex=xduoa+'-ctuning-ae-artifacts.tex'
+    ftex=xduoa+'-front-matter-toc.tex'
+    fcsv=xduoa+'-copyright-form.csv'
 
     anchor=short_name.lower().replace("'","")
 
@@ -156,6 +157,7 @@ def generate(i):
 
     hartifacts=''
     tex=''
+    csv=''
 
     hartifacts+='<table border="1" style="border-width: 1px;border-spacing:0px;" cellpadding="5">\n'
     tex+='\\begin{tabular}{|p{2.85in}|p{0.52in}|p{0.62in}|p{0.56in}|p{0.69in}|p{0.63in}|}\n'
@@ -178,11 +180,14 @@ def generate(i):
     tex+='  \\begin{center}\\small\\textbf{Results\\newline replicated}\\end{center} \\\\\n'
     tex+='\\hline\n'
 
+    paper_id=1
     for a in artifacts:
         aduoa=a['data_uoa']
 
         da=a['dict']
         dp=a['paper_dict']
+
+        paper_id+=1
 
         paper_doi=da.get('paper_doi','')
         artifact_doi=da.get('artifact_doi','')
@@ -211,6 +216,8 @@ def generate(i):
                xauthors+=', '
 
             xauthors+=name
+
+        csv+='"Full Paper","'+title+'","","","","'+str(paper_id)+'"\n'
 
         badges=da.get('acm_badges',{})
 
@@ -309,6 +316,9 @@ def generate(i):
     if r['return']>0: return r
 
     r=ck.save_text_file({'text_file':ftex, 'string':tex})
+    if r['return']>0: return r
+
+    r=ck.save_text_file({'text_file':fcsv, 'string':csv})
     if r['return']>0: return r
 
     # Generating summary for ACM DL
@@ -595,7 +605,7 @@ def generate(i):
 
     # Preparing papers and artifact packs
     seq_no=1
-    a_id=0
+    a_id=1
     sort_key=30
 
     paper_section=[
