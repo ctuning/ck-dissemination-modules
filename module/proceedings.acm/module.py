@@ -418,7 +418,7 @@ def generate(i):
 
     dorg=d.get('organizers',[])
     dadv=d.get('advisory_board',[])
-    dorg+=dadv
+#    dorg+=dadv # not standard
     for org in dorg:
         xorg=[]
         iq+=1
@@ -632,6 +632,9 @@ def generate(i):
         j=original_paper_doi.find('/')
         if j>0:
            article_id=original_paper_doi[j+1:].strip()
+           j=article_id.rfind('.')
+           if j>0:
+              article_id=article_id[j+1:].strip()
 
         paper_file_name=xduoa+'-paper-'+s_a_id+'.pdf'
         artifact_xml=xduoa+'-artifact-'+s_a_id+'.xml'
@@ -728,7 +731,8 @@ def generate(i):
         article_record=[
           {"article_id":article_id},
           {"sort_key":str(sort_key)},
-          {"display_label":"p"},
+          {"display_label":"a"},
+          {"display_no":str(seq_no)},
           {"article_publication_date":d.get('proc_publication_date','')},
           {"seq_no":str(seq_no)},
           {"title":dp.get('title','')},
