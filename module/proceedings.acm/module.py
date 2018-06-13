@@ -214,8 +214,12 @@ def generate(i):
             affiliation=''
             for x in aff:
                 if x!='':
-                   if affiliation!='': affiliation+='; '
-                   affiliation+=affiliations[x]['name']
+                   if affiliation!='': affiliation+=', '
+                   y=affiliations[x]['name']
+                   j=y.find(',')
+                   if j>0:
+                      y=y[:j].strip()
+                   affiliation+=y
 
             if name!='':
                # Check if has entry or just a name
@@ -749,7 +753,8 @@ def generate(i):
             for x in aff:
                 if x!='':
                    if affiliation!='': affiliation+='; '
-                   affiliation+=affiliations[x]['name']
+                   y=affiliations[x]['name']
+                   affiliation+=y
 
             r=ck.access({'action':'load',
                          'module_uoa':cfg['module_deps']['person'],
