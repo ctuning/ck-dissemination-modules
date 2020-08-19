@@ -1,12 +1,12 @@
 {
-  "data_uid": "62a4f46acf5ff29e", 
-  "data_name": "CK dissemination modules", 
+  "data_alias": "ck-dissemination-modules",
+  "data_name": "CK dissemination modules",
+  "data_uid": "62a4f46acf5ff29e",
+  "data_uoa": "ck-dissemination-modules",
   "dict": {
-    "skip_from_index":"yes",
-    "url": "https://github.com/ctuning/ck-dissemination-modules.git", 
     "shared": "git",
-    "sync": "yes"
-  }, 
-  "data_alias": "ck-dissemination-modules", 
-  "data_uoa": "ck-dissemination-modules"
+    "skip_from_index": "yes",
+    "sync": "yes",
+    "url": "https://github.com/ctuning/ck-dissemination-modules.git"
+  }
 }
